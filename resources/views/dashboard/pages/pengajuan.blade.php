@@ -1,91 +1,159 @@
 @extends('dashboard/main')
 
 @section("content")
-<div class="container-fluid mt-3">
-	<div class="row">
-		<div class="col-md-8">
-			<form role="form">
-                <div class="form-group row">
-                    <label for="text" class="col-4 col-form-label">Nama Lengkap</label> 
-                    <div class="col-8">
-                      <input id="text" name="text" type="text" class="form-control">
+<div class="container form-container">
+  <form action="{{ asset('pengajuan', $datas->id) }}" method="post" enctype="multipart/form-data">
+    @csrf
+      <div class="row">
+        <h1>Lengkapi Data</h1> <br> <hr>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Nama Lengkap :</label>
+                  <input type="text" name="nama" class="form-control" placeholder="Masukan Nama Mahasiswa" required>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Universitas/Sekolah :</label>
+                  <input type="text" name="asal_sekolah" class="form-control" placeholder="Masukan Nama Universitas" required>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Jurusan :</label>
+                  <input type="text" name="jurusan" class="form-control" placeholder="Masukan Nama Jurusan" required>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Nomor Induk Mahasiswa :</label>
+                  <input type="text" name="nim" class="form-control" placeholder="Masukan Nomor Induk Mahasiswa" required>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Mulai Magang :</label>
+                  <input type="date" name="tgl_awal" class="form-control" required>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Akhir Magang :</label>
+                  <input type="date" name="tgl_akhir" class="form-control" required>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Email :</label>
+                  <input type="email" name="email" class="form-control" placeholder="Masukan Email" required>
+              </div>
+          </div>
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>No Telp :</label>
+                  <input type="text" name="no_hp" class="form-control" placeholder="Masukan No Telp" required>
+              </div>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-sm-6">
+              <div class="form-group">
+                  <label>Alamat :</label>
+                  <textarea class="form-control" name="alamat" rows="3" id="alamat"></textarea>
+              </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group">
+                <div id="msg"></div>
+                <label>Foto :</label>
+                <input type="file" name="foto" class="file foto" style="display: none;">
+                <div class="input-group my-3">
+                    <input type="text" class="form-control" disabled placeholder="Upload Foto" id="file_foto">
+                    <div class="input-group-append">
+                        <button type="button" id="pilih_foto" class="browse btn btn-info"><i class="fa fa-search"></i> Pilih</button>
                     </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text1" class="col-4 col-form-label">Universitas / Sekolah</label> 
-                    <div class="col-8">
-                      <input id="text1" name="text1" placeholder="e.g. Universitas Dumai" type="text" class="form-control">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text2" class="col-4 col-form-label">Nim</label> 
-                    <div class="col-8">
-                      <input id="text2" name="text2" placeholder="e.g. 1234567" type="text" class="form-control">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text3" class="col-4 col-form-label">Jurusan / Fakultas</label> 
-                    <div class="col-8">
-                      <input id="text3" name="text3" placeholder="e.g. Teknik Informatika" type="text" class="form-control">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text4" class="col-4 col-form-label">Semester / Kelas</label> 
-                    <div class="col-8">
-                      <input id="text4" name="text4" type="text" class="form-control">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text5" class="col-4 col-form-label">Mulai Periode</label> 
-                    <div class="col-8">
-                      <input id="text5" name="text5" type="date" class="form-control">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text6" class="col-4 col-form-label">Selesai Periode</label> 
-                    <div class="col-8">
-                      <input id="text6" name="text6" type="date" class="form-control">
-                    </div>
-                  </div>
-                  <div class="form-group row">
-                    <label for="text6" class="col-4 col-form-label">Alamat</label> 
-                    <div class="col-8">
-                      <input id="text6" name="text7" type="text" class="form-control">
-                    </div>
-                  </div>
-			
-			</form>
-		</div>
-		<div class="col-md-4">
-			<form role="form">
-					<label for="exampleInputFile">
-						File input
-					</label>
-					<input type="file" class="form-control-file" id="exampleInputFile" />
-					<p class="help-block">
-						Example block-level help text here.
-					</p>
-				
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <dl>
-                                <dt>
-                                    Info!
-                                </dt>
-                                <p>
-                                Sebelum mengupload surat pengantar,harap untuk diperiksa kembali agar mengurangi kesalahan    
-                                </p>                                
-                            </dl>
-                        </div>
-                    </div>
-                </div>				
+                </div>
             </div>
-				<button type="submit" class="btn btn-primary">
-					Submit
-				</button>
-			</form>
-		</div>
-	</div>
+        </div>
+        
+        <div class="col-sm-5">
+            <div class="form-group">
+                <div id="msg"></div>
+                <label>Surat Pengajuan Magang :</label>
+                <input type="file" name="surat" class="file surat" accept="application/pdf" style="display: none;">
+                <div class="input-group my-3">
+                    <input type="text" class="form-control" disabled placeholder="Upload Surat" id="file_surat">
+                    <div class="input-group-append">
+                        <button type="button" id="pilih_surat" class="browse btn btn-info"><i class="fa fa-search"></i> Pilih</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+      </div>
+      <div class="row">
+          <div class="col-sm-6">
+              <button type="submit" name="tambah_mahasiswa" width="100px" id="Submit" class="btn btn-success"><i class="fa fa-plus"></i> Daftar</button>
+              <button type="reset" class="btn btn-warning"><i class="fa fa-trash"></i> Reset</button>
+          </div>
+      </div>
+  </form>
 </div>
+
+
+
+<style>
+    .file {
+    visibility: hidden;
+    position: absolute;
+    }
+    .form-container {
+            margin-top: 20px;
+            margin-left: 30px;
+        }
+</style>
+
+<script>
+  document.querySelector('#pilih_foto').addEventListener('click', function() {
+    document.querySelector('.file.foto').click();
+});
+
+document.querySelector('.file.foto').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) {
+        // Set file name to the input text
+        document.querySelector('#file_foto').value = file.name;
+    }
+});
+
+document.querySelector('#pilih_surat').addEventListener('click', function() {
+    document.querySelector('.file.surat').click();
+});
+
+document.querySelector('.file.surat').addEventListener('change', function(e) {
+    var file = e.target.files[0];
+    if (file) {
+        // Check file type
+        if (file.type !== 'application/pdf') {
+            alert('Silakan unggah file dalam format PDF.');
+            e.target.value = ''; // Clear the input
+            return;
+        }
+        
+        // Check file size (5 MB = 5 * 1024 * 1024 bytes)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('Ukuran file maksimal adalah 5 MB.');
+            e.target.value = ''; // Clear the input
+            return;
+        }
+        
+        // Set file name to the input text
+        document.querySelector('#file_surat').value = file.name;
+    }
+});
+
+</script>
+
 @endsection

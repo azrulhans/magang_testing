@@ -15,11 +15,16 @@ class CreatePengajuanTable extends Migration
     {
         Schema::create('pengajuan', function (Blueprint $table) {
             $table->id();
+            $table->string('nama');
+            $table->string('jurusan');
+            $table->string('nim');
             $table->string('nama_sekolah');
-            $table->string('kota');
+            $table->string('email');
             $table->string('alamat');
-	        $table->date('tanggal_awal');
-	        $table->date('tanggal_akhir');
+            $table->string('no_hp');
+	        $table->date('tgl_awal');
+	        $table->date('tgl_akhir');
+            $table->string('foto');
             $table->string('surat');
             $table->timestamps();
         });

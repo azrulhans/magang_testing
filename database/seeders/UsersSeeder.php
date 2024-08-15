@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UsersSeeder extends Seeder
 {
@@ -14,7 +15,7 @@ class UsersSeeder extends Seeder
     public function run()
     {
         
-   $userData = [
+        DB::table('users')->insert([
     [
         'name'=> 'Mas Admin',
         'email'=> 'admin@gmail.com',
@@ -45,10 +46,7 @@ class UsersSeeder extends Seeder
         'role' => 'kabin',
         'password' => bcrypt('123456')
     ],
-];
-            foreach($userData as $key => $val) {
-                User::create($val);
-            }
-            }
+    ]);
 
+    }
 }

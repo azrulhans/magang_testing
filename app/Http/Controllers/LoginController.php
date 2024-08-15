@@ -30,4 +30,16 @@ class LoginController extends Controller
             return redirect('')->withErrors('Username dan password yang dimasukkan tidak sesuai')->withInput();
         }
     }
+      // Method untuk menangani logout
+      public function logout(Request $request)
+      {
+          Auth::logout();
+          
+          // Regenerate session untuk keamanan
+          $request->session()->invalidate();
+          $request->session()->regenerateToken();
+          
+          // Redirect ke halaman login atau halaman lain yang diinginkan
+          return redirect('/');
+      }
 }

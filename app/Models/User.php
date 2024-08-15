@@ -29,7 +29,11 @@ class User extends Authenticatable
         'password',
         'role'
     ];
-
+    public function role(string $role): bool
+    {
+        return $this->role === $role;
+        //untuk membandingkan dan menyamakan anatar 2 variable dan fungsi
+    }
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -38,8 +42,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
-        'two_factor_recovery_codes',
-        'two_factor_secret',
+      
     ];
 
     /**
@@ -59,4 +62,14 @@ class User extends Authenticatable
     protected $appends = [
         'profile_photo_url',
     ];
+     /**
+     * Check if the user has a specific role.
+     *
+     * @param  string  $role
+     * @return bool
+     */
+    public function hasRole($role)
+    {
+        return $this->role === $role;
+    }
 }

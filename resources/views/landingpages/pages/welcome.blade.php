@@ -60,9 +60,14 @@
                 <li class="nav-item">
                     <a class="page-scroll" href="#faq">FAQ</a>
                 </li>
+                @auth
                 <li class="nav-item">
-                    <a class="page-scroll" href="#kontak">Kontak</a>
+                    <a href="{{route('LandingPages-Status')}}">Status Pengajuan</a>
                 </li>
+                @endauth
+                {{-- <li class="nav-item">
+                    <a class="page-scroll" href="#kontak">Kontak</a>
+                </li> --}}
                   <!-- logic login Daftar Akun -->
                   @guest
                   @if (Route::has('login'))
@@ -72,7 +77,7 @@
                    @endif
                   @if (Route::has('register'))
                       <li class="nav-item">
-                          <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                          <a class="nav-link" href="{{ route('register') }}">{{ __('Daftar') }}</a>
                       </li>
                   @endif
               @else
@@ -122,14 +127,12 @@
                 data-wow-duration="1.3s"
                 data-wow-delay="0.2s"
             >
-                Selamat Datang di Website 
-            </h3>
-            <h3
-                class="header-title wow fadeInUp"
-                data-wow-duration="1.3s"
-                data-wow-delay="0.5s"
-            >
-                Magang Kominfo Dumai
+            @if (Auth::check())
+            Selamat Datang, {{ Auth::user()->name }}!
+        @else
+            Selamat Datang di Website Kami! <br>
+            Magang Kominfo Dumai
+        @endif
             </h3>
             </div>
             <!-- header hero content -->
@@ -143,13 +146,13 @@
             data-wow-duration="1.3s"
             data-wow-delay="1.4s"
             >
-            <img  src="assets/images/foto/dis.png" alt="hero" />
+            <img  src="assets/images/foto/d_komin.png" alt="hero" />
             </div >
             <!-- header hero image -->
         </div>
         </div>
         <div class="row" mt-5>
-        <div class="col-lg-12">
+        <div class="col-lg-12" style="text-align: center">
             <p 
                 class="p-title"
                 data-wow-duration="1.3s"
@@ -159,6 +162,7 @@
                Belajar bersama kami, kami membuka penerimaan Mahasiswa dan siswa Magang
                yang sedang melaksanakan kegiatan Magang atau PKL
             </p>
+            <a href="{{route('daftar')}}" class="btn-daftar mt-5">Daftar Pengajuan</a>
         </div>
         </div>
         <!-- row -->
@@ -254,7 +258,7 @@
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Masuk ke halaman daftar kemudian isi pada form registrasi masukan nama lengkap, username, dan password.
+                                Masuk ke halaman Daftar kemudian isi pada form registrasi masukan nama lengkap, username, dan password.
                             </div>
                         </div>
                     </div>
@@ -266,7 +270,7 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Masuk ke menu Pengajuan Magang di panel Mahasiswa/siswa kemudian isi data-data yang tertera beserta foto surat pengantar dari masing-masing kampus / sekolah.
+                                Pilih tombol Daftar Pengajuan kemudian isi data-data yang tertera beserta foto surat pengantar dari masing-masing kampus / sekolah.
                             </div>
                         </div>
                     </div>
@@ -290,7 +294,7 @@
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Silahkan login ke halaman Panel mahasiswa / siswa dan lihat status pengajuan jika anda diterima silahkan datang ke kantor KOMINFO Kota Dumai.
+                                Silahkan login ke halaman Panel mahasiswa / siswa dan lihat di Panel Status Pengajuan jika anda diterima silahkan datang ke kantor KOMINFO Kota Dumai.
                             </div>
                         </div>
                     </div>
@@ -308,73 +312,7 @@
 </section>
 <!--====== ABOUT PART END ======-->
 
-<section id="galeri" class="services-area pt-120">
-      <!--====== GALERI PART START ======-->
-    <div class="container">
-    <div class="row justify-content-center">
-        <div class="col-lg-10">
-        <div class="section-title text-center pb-40">
-            <div class="line m-auto"></div>
-            <h3 class="title">
-            Galeri
-            </h3>
-        </div>
-        <!-- section title -->
-        </div>
-    </div>
-    <!-- paragraf -->
-    <p
-    class="text wow fadeInUp d-flex justify-content-center"
-    data-wow-duration="1.3s"
-    data-wow-delay="0.8s"
-    >
-    <div class="main">
-        <div class="container">
-            <h5 class="mb-4">Galeri Foto SMKN2 Dumai</h5>
-            <div class="album bg-body-tertiary">
-                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="assets/images/foto/f1.jpg" style="width:500px; height: 225px; " class="card-img-top" alt="Galeri 1">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="assets/images/foto/f2.jpg" style="width:500px; height: 225px;" class="card-img-top" alt="Galeri 2">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="assets/images/foto/f3.jpg" style="width:500px; height: 225px;" class="card-img-top" alt="Galeri 3">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="assets/images/foto/f4.jpg" style="width:500px; height: 225px;" class="card-img-top" alt="Galeri 4">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="assets/images/foto/f5.jpg" style="width:500px; height: 225px;" class="card-img-top" alt="Galeri 5">
-                        </div>
-                    </div>
-                    <div class="col">
-                        <div class="card shadow-sm">
-                            <img src="assets/images/foto/f6.jpg" style="width:500px; height: 225px;" class="card-img-top" alt="Galeri 6">
-                        </div>
-                    </div>
-                    <!-- Tambahkan lebih banyak card jika diperlukan -->
-                </div>
-            </div>
-        </div>
-    </div>
-    </div>
-    </p>
-    <!-- paragraf -->
-    </div>
-    <!-- container -->
-     <!--====== GALERI PART START ======-->
-</section>
+
 <!--====== FOOTER PART START ======-->
 <footer id="footer" class="footer-area pt-120">
     <div class="container">
@@ -391,7 +329,7 @@
                 <img src="assets/images/logo/kominfo.png" style="width: 50px; height: 50px;"  />
             </a>
             <p class="text">
-                Website Magang Kominfo Dumai
+                Website Magang Kominfo Kota Dumai
             </p>
             </div>
             <!-- footer about -->
@@ -417,8 +355,8 @@
             <div class="copyright d-sm-flex justify-content-between">
             <div class="copyright-content">
                 <p class="text">
-                Designed By
-                <a href="#" rel="nofollow">Muhammad Azrul Mustafa</a>
+                Copyright &copy; 2024
+                <a href="#" rel="nofollow">Diskominfotiksan Kota Dumai</a>
                 </p>
             </div>
             <!-- copyright content -->
@@ -438,5 +376,6 @@
 <!--====== BACK TOP TOP PART START ======-->
 <a href="#" class="back-to-top"> <i class="lni lni-chevron-up"> </i> </a>
 <!--====== BACK TOP TOP PART ENDS ======-->
+
 
 @endsection

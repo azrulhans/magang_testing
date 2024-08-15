@@ -100,6 +100,25 @@ h6 {
   color: #2E2E2E;
   margin: 0px;
 }
+.btn-daftar {
+  display: inline-block;
+  padding: 20px 30px;
+  margin-top: 25px;
+  font-size: 20px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 7px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.btn-daftar:hover {
+  background-color: #0056b3;
+  color: white;
+  transform: scale(1.05);
+}
+
 .bodyfaq {
   background-color: #f8f9fa;
   display: flex;
