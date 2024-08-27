@@ -6,6 +6,9 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PSekolahController;
+use App\Http\Controllers\SekolahController;
+use App\Models\Peserta;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 
@@ -26,22 +29,40 @@ Route::delete('/dashboard-data-hapus/{id}', [DashboardController::class, 'hapusP
 //midleware berguna sebagai pembatas atau validasi antara sudah memiliki hak akses dan yg belum
 //prefix adalah pengelompokkan routing  ke satu jenis route
 Route::group(['middleware' => ['auth', 'role:admin|tu|peserta|pembimbing|kabin']], function () {
+    //sekolah
+    Route::get('dashboard-sekolah',         [SekolahController::class, 'index'])->name("dashboard-sekolah")->middleware('role:peserta');
+    Route::get('biodata-sekolah',           [SekolahController::class, 'biodata'])->name("biodata-sekolah");
+   // Route::get('biodata-peserta',           [PesertaController::class, 'identitas'])->name("identitas-sekolah");
+   //Route::post('biodata-peserta-store',    [PesertaController::class, 'pengajuan'])->name("campus.store");
+  // Route::delete('/hapus-data/{id}',        [PesertaController::class, 'hapusData'])->name('hapus-data');
+   Route::get('/pengajuan-surat',           [PSekolahController::class, 'index'])->name("pengajuan-sekolah");
+   Route::post('/pengajuan-surat-ajukan',           [PSekolahController::class, 'ajukan'])->name("ajukan");
+   Route::get('/pengajuan-surat-view/{id}',  [PSekolahController::class, 'view'])->name("pengajuan-sekolah-view");
+   Route::post('/pengajuan-surat-store',    [PSekolahController::class, 'pengajuanSurat'])->name("pengajuanSuratstore");
+   Route::delete('/pengajuan-surat-delete/{id}',    [PSekolahController::class, 'hapusPengajuan'])->name("pengajuanSuratdelete");
+   Route::post('/pengajuan-peserta-storee',    [PSekolahController::class, 'pengajuanPeserta']);
 
-// Route::prefix('admin')->middleware(["auth"])->controller(DashboardController::class)->group(function () {
-   //routing landingpages
-    Route::get("dashboard-peserta", [DashboardController::class, 'index1'])->name("dashboard-peserta");
-    Route::get('/landingpage', [LandingPageController::class, 'index'])->name("landing-page")->middleware('role:peserta');
-    Route::get('landingpage-peserta', [LandingPageController::class, 'daftar'])->name('daftar');
-    Route::post('landingpage-peserta/{id}', [LandingPageController::class, 'store']);
-    Route::get('LandingPages-Status', [LandingPageController::class, 'landingPengajuan'])->name('LandingPages-Status');
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+
+    //Route::get('dashboard-peserta',         [DashboardController::class, 'index1'])->name("dashboard-peserta");
+    Route::get('/landingpage',              [LandingPageController::class, 'index'])->name("landing-page");
+    Route::get('landingpage-peserta',       [LandingPageController::class, 'daftar'])->name('daftar');
+    Route::post('landingpage-peserta',      [LandingPageController::class, 'store']);
+    Route::get('LandingPages-Status/{id}',  [LandingPageController::class, 'landingPengajuan'])->name('LandingPages-Status');
+    Route::post('/logout',                  [LoginController::class, 'logout'])->name('logout');
     
-    //routing dashboard`
-    Route::get('/dashboard-utama', [DashboardController::class , 'dashboard'])->name("dashboard-utama")->middleware('role:admin');
-    Route::get('/dashboard-data-peserta', [DashboardController::class , 'dataPeserta']);
-    Route::get('/dashboard-data-profile', [DashboardController::class , 'showProfile']);
+    //
+  
+    //routing dashboard admin
+    Route::get('/dashboard-utama',                [DashboardController::class , 'dashboard'])->name("dashboard-utama")->middleware('role:admin');
+    Route::get('/dashboard-data-peserta',         [DashboardController::class , 'dataPeserta']);
+    Route::get('/dashboard-surat-view/{id}',     [DashboardController::class, 'view'])->name("dashboard-view");
+    Route::get('/pengajuan-surat-create/{id}',  [DashboardController::class, 'create'])->name("pengajuan-sekolah-create");
+    Route::post('/pengajuan-status-store',  [DashboardController::class, 'pengajuanStore'])->name("status.store");
+
+
+    Route::get('/dashboard-data-profile',         [DashboardController::class , 'showProfile']);
     //put dan patch adalah 2 sintak yang sama untuk pengubahan data
-    Route::patch('/dashboard-data-profile/{id}', [DashboardController::class , 'update']);
+    Route::patch('/dashboard-data-profile/{id}',  [DashboardController::class , 'update']);
     
     Route::get('/dashboard-logbook', [PesertaController::class , 'index'])->name('projects');
     Route::post('/dashboard-logbook',  [PesertaController::class , 'store'])->name('projects.store');

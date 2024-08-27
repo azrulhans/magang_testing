@@ -18,7 +18,7 @@
                 <tr>
                     <th>Nama</th>
                     <th>Mulai Magang</th>
-                    <th>Ahir Magang</th>
+                    <th>Akhir Magang</th>
                     <th>Foto</th>
                     <th>Surat Pengajuan</th>
                     <th>Status</th></th>

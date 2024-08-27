@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>AdminLTE 3 | Dashboard</title>
+  <title>Dashboard Sekolah</title>
+  
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -143,7 +144,7 @@
       </li>
     </ul>
   </nav>
-  @include('admin/layouts/sidebar')
+  @include('sekolah/layouts/sidebar')
   @include('sweetalert::alert')
   <!-- /.navbar -->
   @yield('content')
@@ -156,16 +157,16 @@
 <script>
   $.widget.bridge('uibutton', $.ui.button)
 </script>
-<!-- Bootstrap 4 -->
+<!-- Bootstrap 4 --> 
 <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
 <!-- ChartJS -->
-<script src="plugins/chart.js/Chart.min.js"></script>
+ <script src="plugins/chart.js/Chart.min.js"></script>
 <!-- Sparkline -->
-<script src="plugins/sparklines/sparkline.js"></script>
+<script src="plugins/sparklines/sparkline.js"></script> 
 <!-- JQVMap -->
 <script src="plugins/jqvmap/jquery.vmap.min.js"></script>
 <script src="plugins/jqvmap/maps/jquery.vmap.usa.js"></script>
-<!-- jQuery Knob Chart -->
+ <!-- jQuery Knob Chart -->
 <script src="plugins/jquery-knob/jquery.knob.min.js"></script>
 <!-- daterangepicker -->
 <script src="plugins/moment/moment.min.js"></script>
@@ -183,5 +184,6 @@
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
 
+    <!-- jQuery and Bootstrap JS -->
 </body>
 </html>

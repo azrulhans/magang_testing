@@ -18,7 +18,7 @@
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
           <li class="nav-item has-treeview ">
-            <a href="{{asset('dashboard-utama')}}" class="nav-link active">
+            <a href="{{asset('dashboard-sekolah')}}" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
@@ -27,15 +27,15 @@
           </li>
            
               <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-data-peserta')}}" class="nav-link">
+                <a href="{{asset('biodata-sekolah')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Data Peserta Magang</p>
+                  <p>Biodata Sekolah</p>
                 </a>
               </li>
               <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-data-profile')}}" class="nav-link">
+                <a href="{{asset('pengajuan-surat')}}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Profile</p>
+                  <p>Peserta Magang</p>
                 </a>
               </li>
               <li class="nav-item has-treeview">

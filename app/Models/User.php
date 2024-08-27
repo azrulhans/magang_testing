@@ -72,4 +72,20 @@ class User extends Authenticatable
     {
         return $this->role === $role;
     }
+        // Relasi dengan model Pengajuan
+        public function pengajuan()
+        {
+            return $this->hasMany(Pengajuan::class);
+        }
+
+        public function PengajuanSekolah()
+        {
+            return $this->hasMany(PengajuanSekolah::class);
+        }
+        
+        public function sekolah()
+        {
+            return $this->hasOne(Sekolah::class);
+        }
+
 }

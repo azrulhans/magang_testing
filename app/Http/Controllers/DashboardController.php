@@ -1,7 +1,10 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Balasan;
+use App\Models\jurusan;
 use App\Models\Pengajuan;
+use App\Models\PengajuanSekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,14 +14,14 @@ use PhpParser\Node\Expr\Cast\String_;
 
 class DashboardController extends Controller
 {
-    public function index1()
-    {
-        if (!auth()->user()->role === 'peserta') {
-            return redirect("dashboard-peserta");
-        }
+    // public function index1()
+    // {
+    //     if (auth()->user()->role === 'admin') {
+    //         return redirect("dashboard-utama");
+    //     }
 
-        return view("dashboard/pages/index1");
-    }
+    //     return view('sekolah.index');
+    // }
     public function pengajuan(){
         $datas = new Pengajuan;
         return view("dashboard/pages/pengajuan", compact('datas'));
@@ -67,19 +70,91 @@ class DashboardController extends Controller
      public function index(){
         return view("admin.layouts.main");
      }
+     
      public function dashboard(){
+        if (!auth()->user()->role === 'admin') {
+            return redirect("dashboard-utama");
+        }
         return view("admin.pages.dashboard");
      }
 
      public function dataPeserta(){
-        $datas = Pengajuan::paginate(10); // Menampilkan 10 data per halaman
-        return view("admin.pages.peserta.index", compact('datas'));
+       // Mendapatkan ID user yang sedang login
+       $userId = auth()->user()->id;
+       // Mengambil semua data dari tabel PengajuanSekolah
+       $peserta = PengajuanSekolah::all();
+           // Ambil data Pengajuan dari semua user, dengan relasi jurusan
+           $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get(); 
+       //$jurusan = jurusan::all();
+
+        return view("admin.pages.peserta.index", compact('peserta','data'));
+    }
+    //liat dashboard peserta
+    public function view($userId)
+    {
+      // Mendapatkan ID user yang sedang login
+      $pengajuanSekolah = PengajuanSekolah::where('user_id', $userId)->first();
+      $data = Pengajuan::with('jurusan')
+                 ->where('user_id', $userId)
+                 ->latest()
+                 ->paginate(5);
+
+        return view('admin.pages.peserta.index', compact('peserta', 'data'));
+    }
+    
+
+//liat data
+     public function statusPeserta($id){
+        $status = Balasan::where('id', $id)->first();
+        return view("admin.pages.peserta.index", compact('status'));
+     }
+//tambah data status
+     public function create($id)
+     {
+         $status = Balasan::where('id', $id)->first();
+         $peserta = Pengajuan::where('id', $id)->first();
+         return view('admin.pages.peserta.index', compact('peserta','status'));
+     }
+ 
+     public function pengajuanStore(Request $request, $id)
+     {
+        // dd($request->all());
+         // Validasi data
+         $request->validate([
+             'status' => 'required|in:diterima,ditolak',
+            'alasan' => 'nullable|nullable_if:status,ditolak|string|max:250',
+             'surat_balasan' => 'required_if:status,diterima|mimes:pdf|max:5120',
+         ], [
+             'status.required' => 'Status harus diisi.',
+             'alasan.required_if' => 'Alasan penolakan harus diisi jika status ditolak.',
+             'surat_balasan.required_if' => 'Surat balasan harus diupload jika status diterima.',
+             'surat_balasan.mimes' => 'File surat harus berupa PDF.',
+             'surat_balasan.max' => 'File surat tidak boleh lebih dari 5MB.',
+         ]);
+     
+         $suratPath = $request->file('surat_balasan') ? $request->file('surat_balasan')->store('surat_balasan', 'public') : null;
+     
+         Balasan::create([
+             'status' => $request->status,
+             'alasan' => $request->status === 'ditolak' ? $request->alasan : null,
+             'surat_balasan' => $request->status === 'diterima' ? $suratPath : null,
+         ]);
+     
+         $id = $request->id;
+         $status = $request->status;
+         // Periksa jika status tidak diisi, setel ke "menunggu"
+         if (empty($status)) {
+             $status = 'belum diisi';
+         }
+ 
+         $dataBaru = [
+             "status" =>  $status
+         ];
+         $konfirmasi = Balasan::where("id", $id)->update($dataBaru);
+ 
+         return redirect()->back()->with('success', 'Status Berhasil Disimpan');
      }
 
-     public function statusPeserta($id){
-        $pengajuan = Pengajuan::where('id', $id)->first();
-        return view("admin.pages.peserta.status", compact('pengajuan'));
-     }
 
     public function konfirmasiPeserta(Request $request, $id){
         $request->validate([
@@ -96,7 +171,7 @@ class DashboardController extends Controller
         $dataBaru = [
             "status" =>  $status
         ];
-        $konfirmasi = Pengajuan::where("id", $id)->update($dataBaru);
+        $konfirmasi = Balasan::where("id", $id)->update($dataBaru);
 
         return redirect('dashboard-data-peserta')->with('success', 'Status Berhasil Tersimpan');;
     }

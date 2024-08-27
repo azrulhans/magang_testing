@@ -1,4 +1,4 @@
-@extends("admin.layouts.main")
+@extends("sekolah.layouts.main")
 @section('content')
 @include('sweetalert::alert')
 
@@ -25,7 +25,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{asset('biodata-peserta')}}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
+                        <a href="{{asset('pengajuan-surat')}}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
                             <i class="fas fa-plus-square"></i>
                         </a>
                     </div>
@@ -41,7 +41,6 @@
                                     <th>Tanggal Akhir</th>
                                     <th>Surat</th>
                                     <th>Aksi</th>
-                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -60,7 +59,7 @@
                                     @endif    
                                     </td>
                                     <td>
-                                        <a href="{{ asset('dashboard-surat-view/' . $p->id ) }}"  class="btn btn-sm btn-success" data-toggle="modal" data-target="#viewModal{{ $p->id }}"
+                                        <a href="{{ asset('pengajuan-surat-view/' . $p->id) }}"  class="btn btn-sm btn-success" data-toggle="modal" data-target="#viewModal{{ $p->id }}"
                                             data-no-surat="{{ $p->no_surat }}"
                                             data-tgl-surat="{{ $p->tgl_surat }}"
                                             data-tgl-mulai="{{ $p->tgl_mulai }}"
@@ -68,23 +67,12 @@
                                             data-surat="{{ asset('storage/' . $p->surat) }}">
                                             <i class="fas fa-eye"></i>
                                     </a>
-                                    <a href="{{ asset('pengajuan-surat-create/' . $p->id) }}" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#createModal{{ $p->id }}">
+                                    <a href="" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDataModal{{ $p->id }}">
                                         <i class="fas fa-plus-square"></i> 
                                         </a>
                                         <!-- Button trigger modal -->
                                             <a href="" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal{{ $p->id }}">
                                                 <i class="fas fa-trash"></i></a>
-                                    </td>
-                                    <td>
-                                        @if($p->balasan)
-                                        @if($p->balasan->status == 'diterima')
-                                            <span class="badge bg-success">Diterima</span>
-                                        @elseif($p->balasan->status == 'ditolak')
-                                            <span class="badge bg-danger">Ditolak</span>
-                                        @endif
-                                    @else
-                                    <span class="badge bg-secondary">Belum Diisi</span>
-                                    @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -242,92 +230,63 @@
 
 <!-- Modal Add peserta -->
 @foreach($peserta as $p)
-<div class="modal fade" id="createModal{{ $p->id }}" tabindex="-1" role="dialog" aria-labelledby="createModalLabel{{ $p->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade" id="addDataModal{{ $p->id }}" tabindex="-1" role="dialog" aria-labelledby="addDataModalLabel{{ $p->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel{{ $p->id }}">Pengajuan Surat</h5>
+                <h5 class="modal-title" id="addDataModalLabel{{ $p->id }}">Tambah Data Peserta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-            <form action="{{ route('status.store') }}" method="POST" enctype="multipart/form-data">
+            <form action="/pengajuan-peserta-storee" method="POST">
                 @csrf
-                <div class="form-group">
-                    <label for="status{{ $p->id }}">Status:</label>
-                    <select class="form-control" id="status{{ $p->id }}" name="status" onchange="toggleFormFields({{ $p->id }})">
-                        <option value="" selected disabled>Pilih Status</option>
-                        <option value="diterima">Diterima</option>
-                        <option value="ditolak">Ditolak</option>
-                    </select>
-                </div>
-                
-                <!-- Text Area Alasan Ditolak -->
-                <div class="form-group" id="alasanDitolak{{ $p->id }}" style="display: none;">
-                    <label for="alasan{{ $p->id }}">Alasan Penolakan:</label>
-                    <textarea class="form-control" id="alasan{{ $p->id }}" name="alasan" rows="3"></textarea>
-                </div>
-
-                <!-- Form Input File Surat Balasan -->
-                <div class="form-group" id="suratBalasan{{ $p->id }}" style="display: none;">
-                    <label for="surat{{ $p->id }}">Upload Surat Balasan:</label>
-                    <input type="file" accept="application/pdf" class="form-control" id="surat{{ $p->id }}" name="surat_balasan">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama">Nama</label>
+                        <input type="text" class="form-control" id="nama" name="nama"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nim">NIM</label>
+                        <input type="text" class="form-control" id="nim" name="nim"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jurusan">Jurusan</label>
+                        <input type="text" class="form-control" id="jurusan" name="jurusan"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="alamat">Alamat</label>
+                        <input type="text" class="form-control" id="alamat" name="alamat"  required>
+                    </div>
+                    <div class="form-group">
+                        <label for="jenis_kelamin">Jenis Kelamin</label>
+                        <select class="form-control" id="jenis_kelamin" name="jk" required>
+                            <option value="Laki-laki" >Laki-laki</option>
+                            <option value="Perempuan" >Perempuan</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="no_hp">No HP</label>
+                        <input type="text" class="form-control" id="no_hp" name="no_hp" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" class="form-control" id="email" name="email"  required>
+                    </div>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
                     <button type="submit" class="btn btn-primary">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-            </div>
-        </form>
-        </div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
 @endforeach
-
-
-<script>
-    function toggleFormFields(id) {
-    var statusElement = document.getElementById('status' + id);
-    var alasanDiv = document.getElementById('alasanDitolak' + id);
-    var suratDiv = document.getElementById('suratBalasan' + id);
-
-    var status = statusElement.value;
-
-    if (status === 'ditolak') {
-        alasanDiv.style.display = 'block';
-        suratDiv.style.display = 'none';
-        alasanDiv.querySelector('textarea').required = true;
-        suratDiv.querySelector('input').required = false;
-    } else if (status === 'diterima') {
-        alasanDiv.style.display = 'none';
-        suratDiv.style.display = 'block';
-        alasanDiv.querySelector('textarea').required = false;
-        suratDiv.querySelector('input').required = true;
-    } else {
-        alasanDiv.style.display = 'none';
-        suratDiv.style.display = 'none';
-        alasanDiv.querySelector('textarea').required = false;
-        suratDiv.querySelector('input').required = false;
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var allStatusElements = document.querySelectorAll('[id^=status]');
-    allStatusElements.forEach(function(statusElement) {
-        var id = statusElement.id.replace('status', '');
-        toggleFormFields(id); // Inisialisasi saat halaman dimuat
-        statusElement.addEventListener('change', function() {
-            toggleFormFields(id);
-        });
-    });
-});
-
-    </script>
-
 {{-- batas add peserta --}}
 
-<!-- Modal for add surat -->
+<!-- Modal for Adding surat -->
+{{-- @foreach($peserta as $p) --}}
 <div class="modal fade" id="addCampusModal" tabindex="-1" role="dialog" aria-labelledby="addCampusModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -376,6 +335,7 @@ document.addEventListener('DOMContentLoaded', function() {
         </div>
     </div>
 </div>
+{{-- @endforeach --}}
 {{-- batas modal tambah --}}
 
 {{-- ajax untuk view --}}
@@ -439,4 +399,3 @@ document.querySelector('.file.surat').addEventListener('change', function(e) {
 </script>
 
 @endsection
-

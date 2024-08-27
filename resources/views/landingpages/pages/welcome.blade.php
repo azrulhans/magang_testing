@@ -62,7 +62,7 @@
                 </li>
                 @auth
                 <li class="nav-item">
-                    <a href="{{route('LandingPages-Status')}}">Status Pengajuan</a>
+                    <a href="{{route('LandingPages-Status', ['id' => $datas->id]) }}">Status Pengajuan</a>
                 </li>
                 @endauth
                 {{-- <li class="nav-item">

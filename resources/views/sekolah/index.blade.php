@@ -1,5 +1,6 @@
-@extends("admin.layouts.main")
-@section('content')
+@extends('sekolah.layouts.main')
+@section("content")
+
 <!-- Content Wrapper. Contains page content -->
  <div class="content-wrapper">
     <!-- Content Header (Page header) -->
@@ -46,7 +47,7 @@
               <div class="inner">
                 <h3>53<sup style="font-size: 20px">%</sup></h3>
 
-                <p>Data Pengajuan</p>
+                <p>Data Peserta Magang</p>
               </div>
               <div class="icon">
                 <i class="ion ion-stats-bars"></i>
@@ -90,4 +91,4 @@
     </section>
     <!-- /.content -->
   </div>
-  @endsection
+@endsection

@@ -1,23 +1,22 @@
-@extends('landingpages/main')
-
+@extends('sekolah.layouts.main')
 @section("content")
-
+<div class="content-wrapper">
 <div class="card card-primary" style="width: 65%; margin: 0 auto;">
     <div class="card-header" style="background-color: #007bff;">
-      <h3 class="card-title" style=" color: #fff; font-family: inherit;" >
-        Form Pengajuan
+      <h3 style=" color: #fff; font-family: inherit;" >
+        Identitas Kampus / Sekolah
     </h3>
-      <p class="card-title" style=" color: #fff; font-family: inherit;" >
+      <p style=" color: #fff; font-family: inherit;" >
         Lengkapi data dengan sebenarnya ,isilah dengan teliti tanpa ada kesalahan.
       </p>
     </div>
     <!-- /.card-header -->
     <!-- form start -->
-    <form  action="{{ asset('landingpage-peserta/' . auth()->user()->id) }}" method="post" enctype="multipart/form-data">
+    <form  action="{{ asset('biodata-sekolah/' . auth()->user()->id) }}" method="post" enctype="multipart/form-data">
         @csrf
         <div class="card-body">
             <div class="form-group">
-                <label style="font-weight: 700; color:black;  display: inline-block; margin-bottom: .5rem;" for="exampleInputEmail1">Nama Lengkap :</label>
+                <label style="font-weight: 700; color:black;  display: inline-block; margin-bottom: .5rem;" for="exampleInputEmail1">Nama Kampus/Sekolah :</label>
                 <input type="text"  class="form-control" name="nama" id="exampleInputEmail1" placeholder="Masukin Nama Anda" required><br>
             </div>
             <div class="form-group">
@@ -87,44 +86,6 @@
   </div>
 
   
-<script>
-    document.querySelector('#pilih_foto').addEventListener('click', function() {
-      document.querySelector('.file.foto').click();
-  });
-  
-  document.querySelector('.file.foto').addEventListener('change', function(e) {
-      var file = e.target.files[0];
-      if (file) {
-          // Set file name to the input text
-          document.querySelector('#file_foto').value = file.name;
-      }
-  });
-  
-  document.querySelector('#pilih_surat').addEventListener('click', function() {
-      document.querySelector('.file.surat').click();
-  });
-  
-  document.querySelector('.file.surat').addEventListener('change', function(e) {
-      var file = e.target.files[0];
-      if (file) {
-          // Check file type
-          if (file.type !== 'application/pdf') {
-              alert('Silakan unggah file dalam format PDF.');
-              e.target.value = ''; // Clear the input
-              return;
-          }
-          
-          // Check file size (5 MB = 5 * 1024 * 1024 bytes)
-          if (file.size > 5 * 1024 * 1024) {
-              alert('Ukuran file maksimal adalah 5 MB.');
-              e.target.value = ''; // Clear the input
-              return;
-          }
-          
-          // Set file name to the input text
-          document.querySelector('#file_surat').value = file.name;
-      }
-  });
-  
-  </script>
+</div>
+
 @endsection

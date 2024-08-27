@@ -38,7 +38,7 @@
     <script src="assets/js/glightbox.min.js"></script>
     <script src="assets/js/count-up.min.js"></script>
     <script src="assets/js/particles.min.js"></script>
-    {{-- <script src="assets/js/main.js"></script> --}}
+    <script src="assets/js/main.js"></script> 
    
   </body>
 </html>

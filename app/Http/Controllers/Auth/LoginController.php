@@ -42,7 +42,7 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         if ($user->role === 'peserta') {
-            return redirect()->route('landing-page');
+            return redirect()->route('dashboard-sekolah');
         }
 
         return redirect()->route('dashboard-utama');

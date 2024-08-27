@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Sekolah;
 use App\Providers\RouteServiceProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -53,6 +54,8 @@ class RegisterController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'alamat' => ['required', 'string', 'max:255'], // Validasi untuk alamat kampus
+            'no_telp' => ['required', 'string', 'max:100'], // Validasi untuk no telepon kampus
         ]);
     }
 
@@ -64,6 +67,14 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+          // Menyimpan data sekolah ke dalam tabel 'sekolah'
+    Sekolah::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'alamat' => $data['alamat'], // Sesuaikan dengan name input pada form
+        'no_telp' => $data['no_telp'], // Sesuaikan dengan name input pada form
+    ]);
+
         return User::create([
             'name' => $data['name'],
             'email' => $data['email'],
