@@ -75,12 +75,12 @@ class User extends Authenticatable
         // Relasi dengan model Pengajuan
         public function pengajuan()
         {
-            return $this->hasMany(Pengajuan::class);
+            return $this->hasOne(Pengajuan::class, 'user_id');
         }
 
         public function PengajuanSekolah()
         {
-            return $this->hasMany(PengajuanSekolah::class);
+            return $this->hasMany(PengajuanSekolah::class, 'user_id');
         }
         
         public function sekolah()

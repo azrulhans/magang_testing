@@ -23,7 +23,7 @@ class Pengajuan extends Model
     {
         return $this->belongsTo(jurusan::class, 'id_jurusan');
     }
-    public function PengajuanSekolah()
+    public function pengajuan()
     {
         return $this->belongsTo(PengajuanSekolah::class, 'pengajuan_id');
     }

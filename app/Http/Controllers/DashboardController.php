@@ -8,20 +8,63 @@ use App\Models\PengajuanSekolah;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Expr\Cast\String_;
 
 class DashboardController extends Controller
 {
-    // public function index1()
-    // {
-    //     if (auth()->user()->role === 'admin') {
-    //         return redirect("dashboard-utama");
-    //     }
+    public function dataPeserta(){
+      // Mendapatkan ID user yang sedang login
+      $userId = auth()->user()->id;
 
-    //     return view('sekolah.index');
-    // }
+      // Mengambil semua data dari tabel PengajuanSekolah
+      $peserta = PengajuanSekolah::with('balasan')->get();
+
+      // Pisahkan peserta yang belum diisi statusnya
+        $belumDiisi = $peserta->filter(function($p) {
+        return is_null($p->balasan);
+        });
+
+        // Pisahkan peserta yang sudah diisi statusnya
+        $sudahDiisi = $peserta->filter(function($p) {
+        return !is_null($p->balasan);
+        });
+
+        // Gabungkan peserta dengan yang belum diisi statusnya di atas
+        $pesertaSorted = $belumDiisi->merge($sudahDiisi);
+        
+         // Ambil data Pengajuan dari semua user, dengan relasi jurusan
+          $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get(); 
+        $balasan = DB::table('balasan')->get();
+       return view("admin.pages.peserta.index", compact('peserta','data','balasan'));
+    }
+    public function cariPeserta(Request $request)
+{
+    // Mendapatkan ID user yang sedang login
+    $userId = auth()->user()->id;
+
+    // Ambil semua data dari tabel PengajuanSekolah beserta relasi balasan
+    $query = PengajuanSekolah::with('balasan');
+
+    // Cek apakah ada input tanggal dari form
+    if ($request->has('date')) {
+        $date = $request->input('date');
+
+        // Filter data berdasarkan tanggal surat
+        $query->whereDate('tgl_surat', $date);
+    }
+
+    // Dapatkan data peserta setelah filter
+    $peserta = $query->get();
+
+    // Ambil data Pengajuan dari semua user, dengan relasi jurusan
+    $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get();
+
+    return view("admin.pages.peserta.index", compact('peserta','data'));
+}
+
     public function pengajuan(){
         $datas = new Pengajuan;
         return view("dashboard/pages/pengajuan", compact('datas'));
@@ -78,19 +121,8 @@ class DashboardController extends Controller
         return view("admin.pages.dashboard");
      }
 
-     public function dataPeserta(){
-       // Mendapatkan ID user yang sedang login
-       $userId = auth()->user()->id;
-       // Mengambil semua data dari tabel PengajuanSekolah
-       $peserta = PengajuanSekolah::all();
-           // Ambil data Pengajuan dari semua user, dengan relasi jurusan
-           $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get(); 
-       //$jurusan = jurusan::all();
-
-        return view("admin.pages.peserta.index", compact('peserta','data'));
-    }
     //liat dashboard peserta
-    public function view($userId)
+    public function view($userId,$id)
     {
       // Mendapatkan ID user yang sedang login
       $pengajuanSekolah = PengajuanSekolah::where('user_id', $userId)->first();
@@ -98,8 +130,8 @@ class DashboardController extends Controller
                  ->where('user_id', $userId)
                  ->latest()
                  ->paginate(5);
-
-        return view('admin.pages.peserta.index', compact('peserta', 'data'));
+                 $balasan = Balasan::with('balasan')->find($id);
+        return view('admin.pages.peserta.index', compact('peserta', 'data','balasan'));
     }
     
 
@@ -154,7 +186,62 @@ class DashboardController extends Controller
  
          return redirect()->back()->with('success', 'Status Berhasil Disimpan');
      }
+    public function pengajuanStatus(Request $request)
+{
+    // Validasi data
+    $request->validate([
+        'balasan_id' => 'required|exists:pengajuansekolah,id',
+        'status' => 'required|in:diterima,ditolak',
+        'alasan' => 'nullable|required_if:status,ditolak|string|max:250',
+        'surat_balasan' => 'nullable|required_if:status,diterima|mimes:pdf|max:5120',
+    ], [
+        'status.required' => 'Status harus diisi.',
+        'alasan.required_if' => 'Alasan penolakan harus diisi jika status ditolak.',
+        'surat_balasan.required_if' => 'Surat balasan harus diupload jika status diterima.',
+        'surat_balasan.mimes' => 'File surat harus berupa PDF.',
+        'surat_balasan.max' => 'File surat tidak boleh lebih dari 5MB.',
+    ]);
 
+    // Cari pengajuan berdasarkan balasan_id
+    $pengajuan = PengajuanSekolah::find($request->balasan_id);
+   // dd($pengajuan->balasan);
+    if ($pengajuan) {
+        // Cek apakah balasan sudah ada untuk pengajuan ini
+        $balasan = Balasan::where('balasan_id', $pengajuan->id)->first();
+        
+        if (!$balasan) {
+            // Jika belum ada balasan, buat balasan baru
+            $balasan = new Balasan();
+            $balasan->balasan_id = $pengajuan->id;
+        }
+
+        // Update data balasan
+        $balasan->status = $request->status;
+        $balasan->alasan = $request->alasan;
+
+        // Proses upload file jika ada
+        if ($request->hasFile('surat_balasan')) {
+            // Hapus file yang lama jika ada
+            if ($balasan->surat_balasan) {
+                Storage::delete($balasan->surat_balasan);
+            }
+
+            $file = $request->file('surat_balasan');
+            $filename = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('surat_balasan', $filename, 'public');
+            $balasan->surat_balasan = $filePath;
+        }
+
+        // Simpan data balasan ke database
+        $balasan->save();
+
+        return redirect()->back()->with('success', 'Status Berhasil Disimpan');
+    }
+
+    return redirect()->back()->with('error', 'Pengajuan tidak ditemukan');
+}
+
+     
 
     public function konfirmasiPeserta(Request $request, $id){
         $request->validate([

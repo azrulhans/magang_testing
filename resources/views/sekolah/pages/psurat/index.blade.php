@@ -13,7 +13,7 @@
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
-                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Identitas Kampus</a>
+                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Data Magang</a>
                         </li>
                     </ol>
                 </div>
@@ -25,7 +25,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header">
-                        <a href="{{asset('pengajuan-surat')}}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
+                        <a href="{{ asset('pengajuan-surat') }}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
                             <i class="fas fa-plus-square"></i>
                         </a>
                     </div>
@@ -46,44 +46,156 @@
                             <tbody>
                                 @foreach($peserta as $p)
                                 <tr>
-                                    <td>{{$loop->iteration}} </td>
-                                    <td> {{$p ->no_surat}} </td>
-                                    <td> {{$p ->tgl_surat}} </td>
-                                    <td> {{$p ->tgl_mulai}} </td>
-                                    <td> {{$p ->tgl_selesai}} </td>
-                                    <td> 
+                                    <td>{{ ($peserta->currentPage() - 1) * $peserta->perPage() + $loop->iteration }}</td>
+                                    <td>{{ $p->no_surat }}</td>
+                                    <td>{{ $p->tgl_surat }}</td>
+                                    <td>{{ $p->tgl_mulai }}</td>
+                                    <td>{{ $p->tgl_selesai }}</td>
+                                    <td>
                                         @if($p->surat)
-                                        <a href="{{ asset('storage/' . $p->surat) }}" target="_blank">Lihat Surat</a>
-                                    @else
-                                        Tidak ada surat
-                                    @endif    
+                                            <a href="{{ asset('storage/' . $p->surat) }}" target="_blank">Lihat Surat</a>
+                                        @else
+                                            Tidak ada surat
+                                        @endif    
                                     </td>
                                     <td>
-                                        <a href="{{ asset('pengajuan-surat-view/' . $p->id) }}"  class="btn btn-sm btn-success" data-toggle="modal" data-target="#viewModal{{ $p->id }}"
+                                        <a href="{{ asset('pengajuan-surat-view/' . $p->id) }}" class="btn btn-sm btn-success" data-toggle="modal" data-target="#viewModal{{ $p->id }}"
                                             data-no-surat="{{ $p->no_surat }}"
                                             data-tgl-surat="{{ $p->tgl_surat }}"
                                             data-tgl-mulai="{{ $p->tgl_mulai }}"
                                             data-tgl-selesai="{{ $p->tgl_selesai }}"
                                             data-surat="{{ asset('storage/' . $p->surat) }}">
                                             <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDataModal{{ $p->id }}">
-                                        <i class="fas fa-plus-square"></i> 
                                         </a>
-                                        <!-- Button trigger modal -->
-                                            <a href="" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal{{ $p->id }}">
-                                                <i class="fas fa-trash"></i></a>
+                                        <a href="" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDataModal{{ $p->id }}">
+                                            <i class="fas fa-plus-square"></i> 
+                                        </a>
+                                        <a href="" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal{{ $p->id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
+    
+                        <!-- Pagination Links -->
+                        <div class="card-footer clearfix">
+                            <ul class="pagination pagination-sm m-0 float-right">
+                              <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
+                              <li class="page-item"><a class="page-link" href="#">1</a></li>
+                              <li class="page-item"><a class="page-link" href="#">2</a></li>
+                              <li class="page-item"><a class="page-link" href="#">3</a></li>
+                              <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
+                            </ul>
+                          </div>
                     </div>
                     <!-- /.card-body -->
-                    
                 </div>
             </div>
         </div>
+    </section>
+    
+    
+    <section class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-6">
+                    <h1>Status Peserta Magang</h1>
+                </div>
+            </div>
+        </div><!-- /.container-fluid -->
+    </section>
+    <section class="content">
+        <div class="row">
+            <div class="col-12">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Data status pengajuan magang</h3>
+  
+                  <div class="card-tools">
+                    <div class="input-group input-group-sm" style="width: 150px;">
+                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+  
+                      <div class="input-group-append">
+                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                  <table class="table table-hover text-nowrap">
+                    <thead>
+                      <tr>
+                        <th>No</th>
+                        <th>Nomor Surat</th>
+                        <th>Tanggal Surat</th>
+                        <th>Status</th>
+                        <th>Keterangan</th>
+                        <th>Surat Balasan</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($peserta as $p)
+                      <tr>
+                        <td>{{$loop->iteration}} </td>
+                        <td> {{$p ->no_surat}} </td>
+                        <td> {{$p ->tgl_surat}} </td>
+                        <td> 
+                            @if($p->balasan)
+                            @switch($p->balasan->status)
+                                @case('diterima')
+                                    <span class="badge bg-success">Diterima</span>
+                                    @break
+                    
+                                @case('ditolak')
+                                    <span class="badge bg-danger">Ditolak</span>
+                                    @break
+                    
+                                @default
+                                    <span class="badge bg-secondary">Status Tidak Diketahui</span>
+                            @endswitch
+                        @else
+                            <span class="badge bg-primary">Proses</span>
+                        @endif
+                        </td>
+                        <td>
+                            @if($p->balasan)
+                                @if($p->balasan->status == 'ditolak')
+                                    {{ $p->balasan->alasan }} {{-- Menampilkan alasan penolakan --}}
+                                @elseif($p->balasan->status == 'diterima')
+                                    Selamat, kamu diterima! {{-- Menampilkan pesan diterima --}}
+                                @endif
+                            @else
+                                <span class="badge bg-primary">Proses</span>
+                            @endif
+                        </td>
+                    
+                        <!-- Kolom untuk menampilkan surat balasan -->
+                        <td>
+                            @if($p->balasan)
+                                @if($p->balasan->status == 'diterima')
+                                    <a href="{{ asset('storage/surat_balasan/' . basename($p->balasan->surat_balasan)) }}" target="_blank">
+                                        Lihat Surat Balasan
+                                    </a> {{-- Link untuk melihat surat balasan jika diterima --}}
+                                @elseif($p->balasan->status == 'ditolak')
+                                    Tidak ada surat balasan {{-- Menampilkan pesan "tidak ada surat balasan" jika ditolak --}}
+                                @endif
+                            @else
+                                <span class="badge bg-primary">Proses</span>
+                            @endif
+                        </td>
+                      </tr>
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+                <!-- /.card-body -->
+              </div>
+              <!-- /.card -->
+            </div>
+          </div>
     </section>
 </div>
 @foreach($peserta as $p)
@@ -156,12 +268,13 @@
                     </div>
                 </div>
                 <hr>
-                <h5 class="modal-title">Detail Peserta</h5>
+                <h5 class="modal-title">Detail Peserta </h5>
                 <div class="card-body" style="overflow: auto;">
                     <table id="example1" class="table table-bordered table-hover">
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Aksi</th>
                                 <th>Nama</th>
                                 <th>Nim</th>
                                 <th>Jurusan</th>
@@ -172,9 +285,18 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($data as $d)
+                            @foreach(list_peserta($p->id) as $d)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
+                                <td> 
+                                    <form action="{{ route('pengajuan-hapus-peserta', $d->id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus data ini?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
+                                </td>
                                 <td>{{ $d->nama }}</td>
                                 <td>{{ $d->nim }}</td>
                                 <td>{{ $d->jurusan->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
@@ -188,45 +310,16 @@
                     </table>
                 </div>
             </div>
-            <div class="modal-footer">
-                <a href="#" data-id="{{ $p->id }}" class="btn btn-primary btn-ajukan">Ajukan</a>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
-            </div>
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-            $(document).ready(function() {
-                    $('.btn-ajukan').on('click', function(e) {
-                        e.preventDefault();
-                        
-                        var id = $(this).data('id');
-
-                        $.ajax({
-                            url: '{{ route('ajukan') }}',
-                            type: 'POST',
-                            data: {
-                                id: id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                alert(response.message);
-                                // Optional: Refresh or update UI as needed
-                                // Example: Reload the page or update a specific section
-                            },
-                            error: function(xhr) {
-                                alert('Terjadi kesalahan: ' + xhr.responseText);
-                            }
-                        });
-                    });
-                });
-                </script>
-    
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
         </div>
     </div>
 </div>
 
 @endforeach
 {{-- Batas view --}}
+
 
 <!-- Modal Add peserta -->
 @foreach($peserta as $p)
@@ -242,6 +335,7 @@
             <form action="/pengajuan-peserta-storee" method="POST">
                 @csrf
                 <div class="modal-body">
+                    <input type="hidden" class="form-control" name="pengajuan_id" value="{{$p->id}}" >
                     <div class="form-group">
                         <label for="nama">Nama</label>
                         <input type="text" class="form-control" id="nama" name="nama"  required>
@@ -286,19 +380,20 @@
 {{-- batas add peserta --}}
 
 <!-- Modal for Adding surat -->
-{{-- @foreach($peserta as $p) --}}
 <div class="modal fade" id="addCampusModal" tabindex="-1" role="dialog" aria-labelledby="addCampusModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addCampusModalLabel">Tambah Peserta</h5>
+                <h5 class="modal-title" id="addCampusModalLabel">Tambah Surat</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            @foreach($peserta as $p)
             <form action="{{ route('pengajuanSuratstore') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
+                    <input type="hidden" class="form-control" name="user_id" value="{{$p->id}}"  >
                     <div class="form-group">
                         <label for="nama_kampus">Nomor Surat</label>
                         <input type="text" class="form-control" id="nama_kampus" name="no_surat" required>
@@ -332,43 +427,11 @@
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
+            @endforeach
         </div>
     </div>
 </div>
-{{-- @endforeach --}}
 {{-- batas modal tambah --}}
-
-{{-- ajax untuk view --}}
-<script>
-$(document).ready(function() {
-    // Ketika modal view dibuka
-    $('.btn-view').on('click', function() {
-        var id = $(this).data('id');
-
-        // AJAX request untuk mendapatkan data peserta
-        $.ajax({
-            url: '/peserta/' + id,
-            method: 'GET',
-            success: function(data) {
-                // Isi modal dengan data
-                $('#modal-no-surat' + id).text(data.no_surat);
-                $('#modal-tgl-surat' + id).text(data.tgl_surat);
-                $('#modal-tgl-mulai' + id).text(data.tgl_mulai);
-                $('#modal-tgl-selesai' + id).text(data.tgl_selesai);
-                $('#modal-nama' + id).text(data.nama);
-                $('#modal-nim' + id).text(data.nim);
-                $('#modal-jurusan' + id).text(data.jurusan);
-                $('#modal-alamat' + id).text(data.alamat);
-                $('#modal-jenis-kelamin' + id).text(data.jk);
-                $('#modal-no-hp' + id).text(data.no_hp);
-                $('#modal-email' + id).text(data.email);
-            }
-        });
-    });
-});
-</script>
-{{-- batas ajax --}}
-
 
 <script>
 document.querySelector('#pilih_surat').addEventListener('click', function() {

@@ -14,6 +14,7 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
                             <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Identitas Kampus</a>
+                      
                         </li>
                     </ol>
                 </div>
@@ -24,11 +25,30 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        <a href="{{asset('biodata-peserta')}}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
-                            <i class="fas fa-plus-square"></i>
-                        </a>
-                    </div>
+                 <div class="card-header">
+    <div class="row align-items-center">
+        <!-- Tombol Tambah -->
+        <div class="col-md-6">
+            <a href="{{ asset('biodata-peserta') }}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
+                <i class="fas fa-plus-square"></i>
+            </a>
+        </div>
+        
+        <!-- Form Pencarian -->
+        <div class="col-md-6 text-right">
+            <form method="GET" action="{{ route('cariPeserta') }}" class="d-inline-block">
+                <div class="form-group mb-0 d-inline-block mr-2">
+                    <input type="date" name="date" class="form-control" placeholder="Tanggal Surat" value="{{ request('date') }}">
+                </div>
+                <div class="d-inline-block">
+                    <button type="submit" class="btn btn-primary">Cari</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+                    
                     <!-- /.card-header -->
                     <div class="card-body" style="overflow: auto">
                         <table id="example1" class="table table-bordered table-hover">
@@ -45,7 +65,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($peserta as $p)
+                                @foreach($peserta->sortBy(function($p) {
+                                    return is_null($p->balasan) ? 0 : 1;
+                                }) as $p)
                                 <tr>
                                     <td>{{$loop->iteration}} </td>
                                     <td> {{$p ->no_surat}} </td>
@@ -77,14 +99,21 @@
                                     </td>
                                     <td>
                                         @if($p->balasan)
-                                        @if($p->balasan->status == 'diterima')
-                                            <span class="badge bg-success">Diterima</span>
-                                        @elseif($p->balasan->status == 'ditolak')
-                                            <span class="badge bg-danger">Ditolak</span>
+                                            @switch($p->balasan->status)
+                                                @case('diterima')
+                                                    <span class="badge bg-success">Diterima</span>
+                                                    @break
+                                    
+                                                @case('ditolak')
+                                                    <span class="badge bg-danger">Ditolak</span>
+                                                    @break
+                                    
+                                                @default
+                                                    <span class="badge bg-secondary">Status Tidak Diketahui</span>
+                                            @endswitch
+                                        @else
+                                            <span class="badge bg-secondary">Belum Diisi</span>
                                         @endif
-                                    @else
-                                    <span class="badge bg-secondary">Belum Diisi</span>
-                                    @endif
                                     </td>
                                 </tr>
                                 @endforeach
@@ -184,7 +213,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach($data as $d)
+                            @foreach(list_peserta($p->id) as $d)
                             <tr>
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $d->nama }}</td>
@@ -198,46 +227,52 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <br>
+                    <form action="{{ route('status.pengajuan.store') }}" method="POST" enctype="multipart/form-data">
+                        @csrf
+                        <div class="form-group">
+                            <input type="hidden" class="form-control" name="balasan_id" value="{{ $p->id }}">
+                            <label for="status{{ $p->id }}">Status:</label>
+                            <select class="form-control" id="status{{ $p->id }}" name="status" onchange="toggleFormFields({{ $p->id }})">
+                                <option disabled selected>Pilih Status</option>
+                                <option value="diterima"{{ old('status', $p->balasan->status ?? '') == 'diterima' ? 'selected' : '' }}>Diterima</option>
+                                <option value="ditolak" {{ old('status', $p->balasan->status ?? '') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Text Area Alasan Ditolak -->
+                        <div class="form-group" id="alasanDitolak{{ $p->id }}" style="display: {{ old('status', $p->balasan->status ?? $p->status) == 'ditolak' ? 'block' : 'none' }};">
+                            <label for="alasan{{ $p->id }}">Alasan Penolakan:</label>
+                            <textarea class="form-control" id="alasan{{ $p->id }}" name="alasan" rows="3">{{ old('alasan', $p->balasan->alasan ?? '') }}</textarea>
+                        </div>
+                    
+                        <!-- Form Input File Surat Balasan -->
+                        <div class="form-group" id="suratBalasan{{ $p->id }}" style="display: {{ old('status', $p->balasan->status ?? $p->status) == 'diterima' ? 'block' : 'none' }};">
+                            <label for="surat{{ $p->id }}">Upload Surat Balasan:</label>
+                            <input type="file" class="form-control" id="surat{{ $p->id }}" name="surat_balasan" accept="application/pdf">
+                                @if($p->balasan && $p->balasan->surat_balasan)
+                                    <small>File yang diupload: <a href="{{ asset('storage/surat_balasan/' . basename($p->balasan->surat_balasan)) }}" target="_blank">Lihat Surat Balasan</a></small>
+                                @endif
+                        </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <a href="#" data-id="{{ $p->id }}" class="btn btn-primary btn-ajukan">Ajukan</a>
+                <button type="submit" class="btn btn-primary">Simpan</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-
             </div>
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-            <script>
-            $(document).ready(function() {
-                    $('.btn-ajukan').on('click', function(e) {
-                        e.preventDefault();
-                        
-                        var id = $(this).data('id');
-
-                        $.ajax({
-                            url: '{{ route('ajukan') }}',
-                            type: 'POST',
-                            data: {
-                                id: id,
-                                _token: '{{ csrf_token() }}'
-                            },
-                            success: function(response) {
-                                alert(response.message);
-                                // Optional: Refresh or update UI as needed
-                                // Example: Reload the page or update a specific section
-                            },
-                            error: function(xhr) {
-                                alert('Terjadi kesalahan: ' + xhr.responseText);
-                            }
-                        });
-                    });
-                });
-                </script>
-    
+        </form>
         </div>
     </div>
 </div>
 
 @endforeach
+<script>
+function toggleFormFields(id) {
+    var status = document.getElementById('status' + id).value;
+    document.getElementById('alasanDitolak' + id).style.display = status === 'ditolak' ? 'block' : 'none';
+    document.getElementById('suratBalasan' + id).style.display = status === 'diterima' ? 'block' : 'none';
+}
+</script>
 {{-- Batas view --}}
 
 <!-- Modal Add peserta -->
@@ -284,7 +319,7 @@
     </div>
 </div>
 @endforeach
-
+{{-- 
 
 <script>
     function toggleFormFields(id) {
@@ -323,7 +358,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-    </script>
+    </script> --}}
 
 {{-- batas add peserta --}}
 
@@ -379,7 +414,7 @@ document.addEventListener('DOMContentLoaded', function() {
 {{-- batas modal tambah --}}
 
 {{-- ajax untuk view --}}
-<script>
+{{-- <script>
 $(document).ready(function() {
     // Ketika modal view dibuka
     $('.btn-view').on('click', function() {
@@ -406,7 +441,7 @@ $(document).ready(function() {
         });
     });
 });
-</script>
+</script> --}}
 {{-- batas ajax --}}
 
 

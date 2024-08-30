@@ -18,17 +18,19 @@ class PengajuanSekolah extends Model
     'tgl_selesai',
     'surat',
     'user_id',
-    'pengajuan_id'
+    'pengajuan_id',
+    'balasan_id'
 ];
-       
+
         public function balasan()
         {
-            return $this->belongsTo(Balasan::class, 'balasan_id');
+            return $this->hasOne(Balasan::class, 'balasan_id');
         }
+
 
         public function user()
         {
-            return $this->belongsTo(User::class);
+            return $this->belongsTo(User::class, 'user_id');
         }          
         public function pengajuan()
         {
