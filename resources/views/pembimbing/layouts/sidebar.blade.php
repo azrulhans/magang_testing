@@ -5,58 +5,38 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          {{-- <img src="{{ asset('storage/fotos/' . $user->foto) }}" alt="Admin" class="rounded-circle p-9" style="width: 50px; height: 50px; object-fit: cover;"> --}}
+          {{-- <img src="{{ asset('storage/fotos/' . $user->foto) }}" alt="Foto" class="rounded-circle p-9" style="width: 50px; height: 50px; object-fit: cover;"> --}}
         </div>
         <div class="info">
-          <a href="#" class="d-block">Selamat datang, {{ auth()->user()->name }}</a>
+          <a href="#" class="d-block">Haii, {{ auth()->user()->name }}</a>
         </div>
       </div>
-
+  
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-         @if(Auth::user()->role == 'sekolah')
           <li class="nav-item has-treeview ">
-            <a href="{{asset('dashboard-sekolah')}}" class="nav-link active">
+            <a href="{{asset('dashboard-pembimbing')}}" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
               <p>
                 Dashboard
               </p>
             </a>
           </li>
-           @endif
-              {{-- <li class="nav-item has-treeview">
-                <a href="{{asset('biodata-sekolah')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Biodata Sekolah</p>
-                </a>
-              </li> --}}
-              @if(Auth::user()->role == 'sekolah')
               <li class="nav-item has-treeview">
-                <a href="{{asset('pengajuan-surat-magang')}}" class="nav-link">
+                <a href="{{asset('dashboard-pembimbing-peserta') }}" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
-                  <p>Peserta Magang</p>
+                  <p>Logbook Peserta</p>
                 </a>
               </li>
-              @endif
-              {{-- @if(Auth::user()->role == 'peserta')
               <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-logbook')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Logbook</p>
-                </a>
-              </li>
-              @endif --}}
-              {{-- @if(Auth::user()->role == 'peserta')
-              <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-data-profile')}}" class="nav-link">
+                <a href="#" class="nav-link">
                   <i class="far fa-circle nav-icon"></i>
                   <p>Profile</p>
                 </a>
               </li>
-              @endif --}}
           <li class="nav-item has-treeview">
               <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();

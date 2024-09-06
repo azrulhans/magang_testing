@@ -9,7 +9,7 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
-
+    
 class User extends Authenticatable
 {
     use HasApiTokens;
@@ -27,13 +27,18 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role'
+        'role',
+        'username',
     ];
-    public function role(string $role): bool
-    {
-        return $this->role === $role;
-        //untuk membandingkan dan menyamakan anatar 2 variable dan fungsi
-    }
+    // public function role(string $role): bool
+    // {
+    //     return $this->role === $role;
+    //     //untuk membandingkan dan menyamakan anatar 2 variable dan fungsi
+    // }
+    public function checkRole(string $role): bool
+{
+    return $this->role === $role;
+}
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -87,5 +92,12 @@ class User extends Authenticatable
         {
             return $this->hasOne(Sekolah::class);
         }
-
+        public function peserta()
+        {
+            return $this->hasOne(Peserta::class, 'user_id');
+        }
+        public function pembimbing()
+        {
+            return $this->hasOne(Pembimbing::class, 'user_id');
+        }
 }

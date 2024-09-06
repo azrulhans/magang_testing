@@ -38,7 +38,9 @@ class DashboardController extends Controller
          // Ambil data Pengajuan dari semua user, dengan relasi jurusan
           $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get(); 
         $balasan = DB::table('balasan')->get();
-       return view("admin.pages.peserta.index", compact('peserta','data','balasan'));
+
+        $user = User::findOrFail(Auth::id());
+       return view("admin.pages.peserta.index", compact('peserta','data','balasan','user'));
     }
     public function cariPeserta(Request $request)
 {
@@ -122,16 +124,17 @@ class DashboardController extends Controller
      }
 
     //liat dashboard peserta
-    public function view($userId,$id)
+    public function view($userId)
     {
+       // $userId = auth()->user()->id;
       // Mendapatkan ID user yang sedang login
-      $pengajuanSekolah = PengajuanSekolah::where('user_id', $userId)->first();
+      $peserta = PengajuanSekolah::where('user_id', $userId)->first();
       $data = Pengajuan::with('jurusan')
                  ->where('user_id', $userId)
                  ->latest()
                  ->paginate(5);
-                 $balasan = Balasan::with('balasan')->find($id);
-        return view('admin.pages.peserta.index', compact('peserta', 'data','balasan'));
+               //  $balasan = Balasan::with('balasan')->find($id);
+        return view('admin.pages.peserta.index', compact('peserta', 'data'));
     }
     
 
@@ -147,7 +150,7 @@ class DashboardController extends Controller
          $peserta = Pengajuan::where('id', $id)->first();
          return view('admin.pages.peserta.index', compact('peserta','status'));
      }
- 
+     
      public function pengajuanStore(Request $request, $id)
      {
         // dd($request->all());
@@ -187,9 +190,9 @@ class DashboardController extends Controller
          return redirect()->back()->with('success', 'Status Berhasil Disimpan');
      }
     public function pengajuanStatus(Request $request)
-{
+    {
     // Validasi data
-    $request->validate([
+    $validated = $request->validate([
         'balasan_id' => 'required|exists:pengajuansekolah,id',
         'status' => 'required|in:diterima,ditolak',
         'alasan' => 'nullable|required_if:status,ditolak|string|max:250',
@@ -234,6 +237,40 @@ class DashboardController extends Controller
 
         // Simpan data balasan ke database
         $balasan->save();
+
+          // Cek jika status diterima
+        if ($validated['status'] === 'diterima') {
+            // Ambil semua peserta terkait pengajuan ini
+            $pesertaList = list_peserta($pengajuan->id);
+
+            foreach ($pesertaList as $peserta) {
+                // Cek apakah email sudah ada di tabel users
+                $existingEmailUser = User::where('email', $peserta->email)->first();
+
+                // Cek apakah NIM (username) sudah ada di tabel users
+                $existingNimUser = User::where('username', $peserta->nim)->first();
+
+                if ($existingEmailUser || $existingNimUser) {
+                    // Jika email atau NIM sudah ada, ubah status menjadi "diproses" dan kembali dengan pesan kesalahan
+                    $balasan->status = 'active';
+                    $balasan->save();
+
+                    return redirect()->back()->with('error', "Email atau NIM sudah digunakan oleh peserta lain. Status pengajuan tetap 'diproses'.");
+                }
+                // Buat akun pengguna baru
+                $user = new User();
+                $user->name = $peserta->nama; // Ambil dari nama di pengajuan
+                $user->email = $peserta->email; // Gunakan email yang dimasukkan
+                $user->username = $peserta->nim; // Gunakan nim sebagai username
+                $user->password = bcrypt($peserta->nim); // Gunakan nim sebagai password
+                $user->role = 'peserta'; // Tetapkan role 'peserta'
+                $user->save();
+
+                    // Opsional: Berikan role atau akses tertentu kepada user
+                 // $user->role('peserta');
+                    //$user->role = $request->role ('peserta');
+            }
+        }
 
         return redirect()->back()->with('success', 'Status Berhasil Disimpan');
     }
@@ -287,48 +324,68 @@ class DashboardController extends Controller
     public function showProfile()
     {
         $user = User::findOrFail(Auth::id());
-        return view('admin.pages.peserta.profile', compact('user'));
+        $peserta = Pengajuan::where('user_id', $user->id)
+        ->with('jurusan')
+        ->first(); 
+          // Ambil data jurusan berdasarkan id_jurusan dari pengajuan
+       //$jurusan = jurusan::find($peserta->id_jurusan);
+        // Panggil helper untuk mendapatkan data pengajuan beserta jurusan
+        // Ambil data pengajuan untuk user yang sedang login dan sertakan data jurusan
+    //   $pengajuan = Pengajuan::where('user_id', $user->id)->with('jurusan')->first(); 
+        return view('admin.pages.peserta.profile', compact('user','peserta'));
     }
     public function update(Request $request, $id)
     {
-        //validate 
-        request()->validate([
+        // Validasi
+        $request->validate([
             'name' => 'required|string|min:2|max:100',
-            'email' => 'required|email|unique:users,email, ' . $id . ',id',
-            'old_password' => 'nullable|string',
-            'password' => 'nullable|required_with:old_password|string|confirmed|min:6'
+            'email' => 'required|email|unique:users,email,' . $id,
+            'username' => 'required|string|min:2|max:100|unique:users,username,' . $id,
+            'password' => 'nullable|string|confirmed|min:6',
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'name.string' => 'Nama harus berupa string.',
+            'name.min' => 'Nama harus memiliki panjang minimal 2 karakter.',
+            'name.max' => 'Nama harus memiliki panjang maksimal 100 karakter.',
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Email harus berupa alamat email yang valid.',
+            'email.unique' => 'Email sudah terdaftar.',
+            'username.required' => 'Username wajib diisi.',
+            'username.string' => 'Username harus berupa string.',
+            'username.min' => 'Username harus memiliki panjang minimal 2 karakter.',
+            'username.max' => 'Username harus memiliki panjang maksimal 100 karakter.',
+            'username.unique' => 'Username sudah terdaftar.',
+            'password.confirmed' => 'Konfirmasi password tidak sesuai.',
+            'password.min' => 'Password harus memiliki panjang minimal 6 karakter.',
         ]);
+    
+     
         $user = User::find($id);
         $user->name = $request->name;
         $user->email = $request->email;
-        if ($request->filled('old_password')) {
-            if (Hash::check($request->old_password, $user->password)) {
-                $user->update([
-                    'password' => Hash::make($request->password)
-                ]);
-            } else {
-                return back()
-                    ->withErrors(['old_password' => __('Tolong periksa passwordnya lagi')])
-                    ->withInput();
-            }
+        $user->username = $request->username; // Update username
+    
+        // Update password jika diisi
+        if ($request->filled('password')) {
+            $user->password = Hash::make($request->password);
         }
-        if (request()->hasFile('foto')) {
-            //kodingan dibawah ini untuk pengecekan apakah foto sudah ada atau belum
+    
+        // Update foto jika ada file yang diupload
+        if ($request->hasFile('foto')) {
             if ($user->foto && file_exists(storage_path('app/public/fotos/' . $user->foto))) {
-                Storage::delete('public/fotos' . $user->foto);
+                Storage::delete('public/fotos/' . $user->foto);
             }
-            //proses requst foto setelah dicek
+    
             $file = $request->file('foto');
-            $fileName = 'foto-' . uniqid() . $file->getClientOriginalName();
-            //pengecekan ekstension, dia sebagai .png .jpg. jpeg dan seterusnya 
-            // $fileName = '.'. $file->getClientOriginalExtension();
-            //dimasukan ke file storagenya 
-            $request->foto->move(storage_path('app/public/fotos/'), $fileName);
-            //request menggunakan eloquent
+            $fileName = 'foto-' . uniqid() . '.' . $file->getClientOriginalExtension();
+            $file->move(storage_path('app/public/fotos/'), $fileName);
             $user->foto = $fileName;
         }
-        $user->role = $request->role ?? 'peserta';
+    
         $user->save();
+    
         return back()->with('success', 'Profile Terupdate');
     }
+    
+    
 }

@@ -19,58 +19,50 @@
       </section>
  <!-- Main content -->
  <section class="content">
-    <div class="row">
-      <div class="col-md-12">
-        <div class="card card-primary">
-          <div class="card-header">
-            <h3 class="card-title">Tambah</h3>
-            <div class="card-tools">
-              <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
-                <i class="fas fa-minus"></i></button>
-            </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card card-primary">
+        <div class="card-header">
+          <h3 class="card-title">{{ isset($logbook) ? 'Update' : 'Tambah' }} Logbook</h3>
+          <div class="card-tools">
+            <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
+              <i class="fas fa-minus"></i></button>
           </div>
-          <form action="{{route('projects', $peserta->id) }}" method="post" enctype="multipart/form-data">
-            @csrf
-          <div class="card-body">
-            <div class="form-group">
-              <label for="inputName">Judul Kegiatan</label>
-              <input type="text" name="judul" id="inputName" class="form-control">
-            </div>
-            <div class="form-group">
-              <label for="inputDescription">Deskripsi Kegiatan</label>
-              <textarea id="inputDescription" name="deskripsi" class="form-control" rows="4"></textarea>
-            </div>
-            <div class="form-group">
-              <label for="inputTanggal">Tanggal Kegiatan</label>
-              <input type="date" id="inputTanggal" name="tanggal"  value="{{ now()->format('Y-m-d') }}" class="form-control">
-            </div>
-            <div class="form-group">
-                <label for="inputClientCompany">Dokumentasi Kegiatan</label>
-                <input type="file" id="inputClientCompany" name="dokumentasi" class="form-control">
-              </div>
-              <div class="form-group">
-                <label for="inputStatus">Status Kegiatan</label>
-                <select name="status" class="form-control custom-select">
-                  <option selected disabled>Pilih</option>
-                  <option>Dalam Proses</option>
-                  <option>Selesai</option>
-                </select>
-              </div>
-          </div>
-          <!-- /.card-body -->
         </div>
-        <!-- /.card -->
+        <form action="{{ isset($logbook) ? route('logbook.update', $logbook->id) : route('logbook.store') }}" method="post" enctype="multipart/form-data">
+          @csrf
+          @if(isset($logbook)) @method('PUT') @endif
+        <div class="card-body">
+          <div class="form-group">
+            <label for="inputName">Judul Kegiatan</label>
+            <input type="text" name="judul" id="inputName" class="form-control" value="{{ $logbook->judul ?? '' }}">
+          </div>
+          <div class="form-group">
+            <label for="inputDescription">Deskripsi Kegiatan</label>
+            <textarea id="inputDescription" name="deskripsi" class="form-control" rows="4">{{ $logbook->deskripsi ?? '' }}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="inputTanggal">Tanggal Kegiatan</label>
+            <input type="text" id="inputTanggal" name="tanggal"  value="{{ $logbook->tanggal ?? now()->format('d-m-Y') }}" class="form-control" readonly>
+          </div>
+          <div class="form-group">
+              <label for="inputClientCompany">Dokumentasi Kegiatan</label>
+              <input type="file" id="inputClientCompany" name="dokumentasi" class="form-control">
+            </div>
+        </div>
       </div>
     </div>
-    <div class="row mb-3">
-        <div class="col-12 d-flex justify-content-center">
-            <a href="{{asset('dashboard-logbook')}}" class="btn btn-secondary mr-2">Kembali</a>
-            <input type="submit" value="Create new Project" class="btn btn-success">
-        </div>
-    </div>
-  </form>
-  
-  </section>    
+  </div>
+  <div class="row mb-3">
+      <div class="col-12 d-flex justify-content-center">
+          <a href="{{ asset('dashboard-logbook') }}" class="btn btn-secondary mr-2">Kembali</a>
+          <input type="submit" value="{{ isset($logbook) ? 'Update Logbook' : 'Create new Logbook' }}" class="btn btn-success">
+      </div>
+  </div>
+</form>
+
+</section>    
+
   <!-- /.content -->
 
 </div>

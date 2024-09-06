@@ -218,7 +218,7 @@
                                 <td>{{ $loop->iteration }}</td>
                                 <td>{{ $d->nama }}</td>
                                 <td>{{ $d->nim }}</td>
-                                <td>{{ $d->jurusan->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
+                                <td>{{ $d->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
                                 <td>{{ $d->alamat }}</td>
                                 <td>{{ $d->jk }}</td>
                                 <td>{{ $d->no_hp }}</td>
@@ -275,50 +275,58 @@ function toggleFormFields(id) {
 </script>
 {{-- Batas view --}}
 
-<!-- Modal Add peserta -->
+<!-- Modal Add peserta to pembimbing -->
 @foreach($peserta as $p)
 <div class="modal fade" id="createModal{{ $p->id }}" tabindex="-1" role="dialog" aria-labelledby="createModalLabel{{ $p->id }}" aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-dialog modal-xl" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="createModalLabel{{ $p->id }}">Pengajuan Surat</h5>
+                <h5 class="modal-title" id="createModalLabel{{ $p->id }}">Detail Peserta</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-            <form action="{{ route('status.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="form-group">
-                    <label for="status{{ $p->id }}">Status:</label>
-                    <select class="form-control" id="status{{ $p->id }}" name="status" onchange="toggleFormFields({{ $p->id }})">
-                        <option value="" selected disabled>Pilih Status</option>
-                        <option value="diterima">Diterima</option>
-                        <option value="ditolak">Ditolak</option>
-                    </select>
+                <div class="card-body" style="overflow: auto;">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>Nama</th>
+                                <th>Nim</th>
+                                <th>Jurusan</th>
+                                <th>Alamat</th>
+                                <th>Jenis Kelamin</th>
+                                <th>No Hp</th>
+                                <th>Email</th>
+                                <th>Bagian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(list_peserta($p->id) as $d)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $d->nama }}</td>
+                                <td>{{ $d->nim }}</td>
+                                <td>{{ $d->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
+                                <td>{{ $d->alamat }}</td>
+                                <td>{{ $d->jk }}</td>
+                                <td>{{ $d->no_hp }}</td>
+                                <td>{{ $d->email }}</td>
+                                <td>
+                                    
+                                </td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                
-                <!-- Text Area Alasan Ditolak -->
-                <div class="form-group" id="alasanDitolak{{ $p->id }}" style="display: none;">
-                    <label for="alasan{{ $p->id }}">Alasan Penolakan:</label>
-                    <textarea class="form-control" id="alasan{{ $p->id }}" name="alasan" rows="3"></textarea>
-                </div>
-
-                <!-- Form Input File Surat Balasan -->
-                <div class="form-group" id="suratBalasan{{ $p->id }}" style="display: none;">
-                    <label for="surat{{ $p->id }}">Upload Surat Balasan:</label>
-                    <input type="file" accept="application/pdf" class="form-control" id="surat{{ $p->id }}" name="surat_balasan">
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Simpan</button>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
-        </form>
-        </div>
         </div>
     </div>
 </div>
 @endforeach
+
 {{-- 
 
 <script>

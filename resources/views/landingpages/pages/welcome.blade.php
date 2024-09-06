@@ -162,7 +162,7 @@
                Belajar bersama kami, kami membuka penerimaan Mahasiswa dan siswa Magang
                yang sedang melaksanakan kegiatan Magang atau PKL
             </p>
-            <a href="{{route('daftar')}}" class="btn-daftar mt-5">Daftar Pengajuan</a>
+            <a href="{{route('dashboard-sekolah')}}" class="btn-daftar mt-5">Daftar Pengajuan</a>
         </div>
         </div>
         <!-- row -->
@@ -199,7 +199,8 @@
             <p class="text">
                <p style="font-style: italic"> Kominfo adalah Kementerian Komunikasi dan Informatika mempunyai tugas menyelenggarakan
                 urusan pemerintahan di bidang komunikasi dan informatika untuk membantu Presiden 
-                dalam menyelenggarakan pemerintahan negara.</p>
+                dalam menyelenggarakan pemerintahan negara.</p><br>
+                <h5>Fasilitas:</h5>
                 <ul class="mt-2">
                     <li>Ruang kerja yang nyaman</li>
                     <li>Staff pekerja yang ramah</li>
@@ -258,7 +259,7 @@
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Masuk ke halaman Daftar kemudian isi pada form registrasi masukan nama lengkap, username, dan password.
+                                Masuk ke halaman Daftar kemudian isi form registrasi data sekolah.
                             </div>
                         </div>
                     </div>
@@ -270,7 +271,7 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Pilih tombol Daftar Pengajuan kemudian isi data-data yang tertera beserta foto surat pengantar dari masing-masing kampus / sekolah.
+                                Pihak perguruan tinggi/sekolah melakukan daftar lalu mengisi surat pengajuan dan data mahasiswa/siswa yang ingin PKL
                             </div>
                         </div>
                     </div>
@@ -294,7 +295,7 @@
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Silahkan login ke halaman Panel mahasiswa / siswa dan lihat di Panel Status Pengajuan jika anda diterima silahkan datang ke kantor KOMINFO Kota Dumai.
+                                Silahkan login ke dashboard perguruan tinggi/sekolah dan lihat di Panel Pengajuan jika sudah menginput data maka status otomatis akan nampil
                             </div>
                         </div>
                     </div>

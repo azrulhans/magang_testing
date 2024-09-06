@@ -27,7 +27,7 @@
           <div class="card card-primary card-outline">
             <div class="card-body box-profile">
               <div class="text-center">
-                <img src="{{asset('storage/fotos/'.$user->foto)}}" alt="Admin" class="rounded-circle p-1 bg-primary" width="110">
+                <img src="{{asset('storage/fotos/'.$user->foto)}}" alt="Foto" class="rounded-circle p-1 bg-primary" width="110">
               </div>
 
               <h3 class="profile-username text-center">{{ Auth::user()->name }}</h3>
@@ -35,7 +35,7 @@
 
               <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
-                  <b>Jurusan</b> <a class="float-right">teknik informatika </a>
+                  <b>Jurusan</b> <a class="float-right">jj </a>
                 </li>
                 <li class="list-group-item">
                   <b>Asal Sekolah</b> <a class="float-right">UNRI</a>
@@ -85,17 +85,17 @@
                             </div>
                           </div>
                           <div class="form-group row">
-                            <label for="inputName2" class="col-sm-2 col-form-label">Old Password </lAbel>
+                            <label for="inputUsername" class="col-sm-2 col-form-label">Username</label>
                             <div class="col-sm-10">
-                              <input type="password" class="form-control @error('old_password') is-invalid @enderror" 
-                              name="old_password">
-                              @error('old_password')
-                              <span class="invalid-feedback" role="alert">
-                                <strong>{{$message}}</strong>
-                              </span>
-                              @enderror
+                                <input type="text" class="form-control @error('username') is-invalid @enderror" 
+                                    name="username" value="{{ old('username', $user->username) }}" required>
+                                @error('username')
+                                    <span class="invalid-feedback" role="alert">
+                                        <strong>{{ $message }}</strong>
+                                    </span>
+                                @enderror
                             </div>
-                          </div>
+                        </div>
                           <div class="form-group row">
                             <label for="inputExperience" class="col-sm-2 col-form-label">New Password</label>
                             <div class="col-sm-10">

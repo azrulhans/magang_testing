@@ -1,4 +1,4 @@
-@extends("admin.layouts.main")
+@extends("pembimbing.layouts.main")
 @section('content')
 @include('sweetalert::alert')
 
@@ -7,7 +7,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Logbook Harian</h1>
+                    <h1>Logbook Peserta</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
@@ -23,65 +23,26 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header">
-                        @php
-                        // Ambil logbook hari ini untuk peserta yang login, pertimbangkan juga jika form dibuka kembali
-                        $logbookHariIni = \App\Models\Peserta::where('tanggal', \Carbon\Carbon::now()->format('Y-m-d'))
-                                                             ->where('user_id', auth()->user()->id) // Pastikan user_id sama dengan peserta login
-                                                            ->latest('tanggal')
-                                                            ->first();
-                        @endphp
-                    
-                    @if($logbookHariIni)
-                    <p>Logbook ditemukan</p>
-                    <p>ID Logbook: {{ $logbookHariIni->id }}</p>
-                    <p>Tanggal: {{ $logbookHariIni->tanggal }}</p>
-                    <p>is_reopened: {{ $logbookHariIni->is_reopened }}</p>
-                @else
-                    <p>Logbook tidak ditemukan untuk user: {{ auth()->user()->id }} pada tanggal: {{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
-                @endif
-                <p>Tanggal hari ini: {{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
-
-                        @if(!$logbookHariIni)
-                        <!-- Tombol Tambah Logbook hanya muncul jika belum ada logbook hari ini atau form telah dibuka kembali -->
-                        <a href="{{ route('logbook.tambah') }}" class="btn btn-md btn-primary">
-                            <i class="fas fa-plus-square"></i> Tambah Logbook
-                        </a>
-
-                        @elseif($logbookHariIni && $logbookHariIni->is_reopened)
-                            <!-- Tombol Edit Logbook hanya muncul jika form dibuka kembali -->
-                            <a href="{{ route('logbook.edit') }}" class="btn btn-md btn-warning">
-                                <i class="fas fa-edit"></i> Edit Logbook
-                            </a>
-                        
-                    @else
-                        <!-- Pesan yang ditampilkan ketika logbook sudah diisi dan form tidak terbuka -->
-                        <div class="alert alert-success" role="alert">
-                            Anda sudah mengisi logbook hari ini.
-                        </div>
-                    @endif
-
-                
-                    </div>
-                    
-
                     <!-- /.card-header -->
                     <div class="card-body" style="overflow: auto">
                         <table id="example1" class="table table-bordered table-hover">
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Judul</th>
+                                    <th>Nama</th>
+                                    <th>judul</th>
                                     <th>Tanggal</th>
                                     <th>Deskripsi</th>
                                     <th>Dokumentasi</th>
+                                    <th>aksi</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach($peserta as $p)
                                 <tr>
                                     <td>{{$loop->iteration}} </td>
-                                    <td> {{$p ->judul}} </td>
+                                    <td> {{ $p->user->name ?? 'Nama tidak ditemukan' }}</td>
+                                    <td> {{$p->judul}}  </td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}
                                     </td>
@@ -92,6 +53,23 @@
                                     @else
                                         Tidak ada dokumentasi
                                     @endif    
+                                    </td>
+                                    <td>
+                                        @if(!$p->is_reopened)
+                             <form action="{{ route('reopen.form', $p->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                 <button type="submit" class="btn btn-sm btn-primary">
+                        <i class="fas fa-check"></i> Buka Kembali
+                    </button>
+                </form>
+            @else
+                <button class="btn btn-sm btn-secondary" disabled>
+                    <i class="fas fa-check"></i> Sudah Dibuka
+                </button>
+            @endif
+                                        <a href="#" class="btn btn-sm btn-success">
+                                            <i class="fas fa-eye"></i> 
+                                            </a>
                                     </td>
                                 </tr>
                                 @endforeach

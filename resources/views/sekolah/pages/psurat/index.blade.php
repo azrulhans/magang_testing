@@ -299,7 +299,7 @@
                                 </td>
                                 <td>{{ $d->nama }}</td>
                                 <td>{{ $d->nim }}</td>
-                                <td>{{ $d->jurusan->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
+                                <td>{{ $d->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
                                 <td>{{ $d->alamat }}</td>
                                 <td>{{ $d->jk }}</td>
                                 <td>{{ $d->no_hp }}</td>
@@ -389,11 +389,12 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            @foreach($peserta as $p)
             <form action="{{ route('pengajuanSuratstore') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-body">
+                    @foreach($peserta as $p)
                     <input type="hidden" class="form-control" name="user_id" value="{{$p->id}}"  >
+                   @endforeach
                     <div class="form-group">
                         <label for="nama_kampus">Nomor Surat</label>
                         <input type="text" class="form-control" id="nama_kampus" name="no_surat" required>
@@ -427,7 +428,6 @@
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
-            @endforeach
         </div>
     </div>
 </div>
