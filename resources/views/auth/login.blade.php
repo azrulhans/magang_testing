@@ -25,8 +25,8 @@
     <div class="row justify-content-center">
         <div class="col-md-7">
             <div class="card shadow-sm border-0">
-                <div class="card-header bg-primary text-white text-center">
-                    <img src="{{ asset('assets/images/foto/d_komin.png') }}" alt="Kominfo Logo" style="height: 100px;" class="mr-2">
+                <div class="card-header text-white text-center">
+                    <img src="{{ asset('assets/images/logo/kominfo-panjang.png') }}" alt="Kominfo Logo" style="height: 100px;" class="mr-2">
                 </div>
 
                 <div class="card-body p-4">

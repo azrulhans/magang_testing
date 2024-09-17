@@ -35,11 +35,11 @@
 
               <ul class="list-group list-group-unbordered mb-3">
                 <li class="list-group-item">
-                  <b>Jurusan</b> <a class="float-right">jj </a>
+                  <b>Nim</b> <a class="float-right">{{ $user->username ?? 'N/A' }}</a>
                 </li>
-                <li class="list-group-item">
-                  <b>Asal Sekolah</b> <a class="float-right">UNRI</a>
-                </li>
+                {{-- <li class="list-group-item">
+                  <b>No HP</b> <a class="float-right">{{ $peserta->id ?? 'N/A' }}</a>
+                </li> --}}
               </ul>
             </div>
             <!-- /.card-body -->

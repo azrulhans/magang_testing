@@ -3,46 +3,94 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pembimbing;
+use App\Models\Pengajuan;
 use App\Models\Peserta;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PembimbingController extends Controller
 {
     public function index(){
-  //  dd($userId);      
-    // Mengambil data pengajuan sekolah yang terkait dengan user yang sedang login
-    $peserta = Peserta::with('user')->get();
+        $peserta = DB::table('pengajuan')
+     //   ->join('peserta', 'pengajuan.pengajuan_id', '=', 'peserta.pengajuan_id')
+        ->join('peserta', 'pengajuan.pembimbing_id', '=', 'peserta.pembimbing_id')
+        ->select('pengajuan.id', 'pengajuan.nama','peserta.is_reopened', 'peserta.judul', 'peserta.deskripsi', 'peserta.tanggal', 'peserta.dokumentasi')
+        ->where('pengajuan.pembimbing_id', 8)
+        ->get();
     
+                                                                                                        
     return view('pembimbing.pages.v_logbook',compact('peserta'));
+    }
+    public function peserta(){
+          // Dapatkan ID pembimbing dari user yang sedang login
+    // $user_id = auth()->user()->id;
+
+    // // Cari pembimbing berdasarkan user_id
+    // $pembimbing = DB::table('pembimbing')->where('user_id', $user_id)->first();
+    // //dd($pembimbing);
+    // // Ambil data peserta berdasarkan id_pembimbing
+    // if ($pembimbing) {
+    //     $data = DB::table('pengajuan')
+    //         ->join('users', 'pengajuan.user_id', '=', 'users.id')
+    //         ->join('jurusan', 'pengajuan.id_jurusan', '=', 'jurusan.id')
+    //         ->where('pengajuan.pembimbing_id', $pembimbing->id)
+    //         ->select('users.name', 'pengajuan.nim', 'jurusan.nama_jurusan', 'pengajuan.jk', 'pengajuan.no_hp', 'pengajuan.alamat')
+    //         ->get();
+    // } else {
+    //     $data = []; // Jika tidak ada pembimbing, kosongkan data
+    // }
+    $pembimbing = DB::table('pengajuan')
+    ->join('jurusan', 'pengajuan.id_jurusan', '=', 'jurusan.id')
+    ->join('pembimbing', 'pengajuan.pembimbing_id', '=', 'pembimbing.id')
+    ->select('pengajuan.id', 'pengajuan.nama', 'pengajuan.nim', 'pengajuan.jk', 'pengajuan.no_hp', 'pengajuan.alamat', 'jurusan.nama_jurusan', 'pembimbing.bagian')
+    ->where('pengajuan.pembimbing_id', 8)
+    ->get();
+
+    return view('pembimbing.pages.v_peserta',compact('pembimbing'));
     }
 
     public function dashboard(){
-
         return view('pembimbing.index');
     }
-   public function reopenForm($id)
-{
-    // Temukan entri berdasarkan ID
-    $logbookHariIni = Peserta::find($id);
-    if (!$logbookHariIni) {
-        return redirect()->back()->with('error', 'Data tidak ditemukan.');
-    }
+    public function reopenForm($id)
+    {
+        // Temukan entri berdasarkan ID
+        $logbookHariIni = Peserta::find($id);
+        if (!$logbookHariIni) {
+            return redirect()->back()->with('error', 'Data tidak ditemukan.');
+        }
     
-    // Pastikan hanya pembimbing yang dapat membuka form
-    if (auth()->user()->role === 'pembimbing') {
-        $logbookHariIni->is_reopened = true; // Tandai sebagai form yang dibuka kembali
-        $logbookHariIni->save();
-       return redirect()->back()->with('success', 'Form berhasil dibuka kembali.');
+        // Pastikan hanya pembimbing yang dapat membuka form, dan pembimbing_id harus cocok
+        if (auth()->user()->role === 'pembimbing') {
+            $pembimbingId = auth()->id(); // Ambil ID pembimbing dari user yang sedang login
+    
+            dd($pembimbingId);
+            // Cari pengajuan atau entri yang terkait dengan peserta dan pastikan pembimbing_id sesuai
+            $pengajuan = Pengajuan::where('user_id', $logbookHariIni->user_id)
+                                  ->where('pembimbing_id', $pembimbingId)
+                                  ->first();
+    
+            if (!$pengajuan) {
+                return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk membuka form ini.');
+            }
+    
+            // Tandai sebagai form yang dibuka kembali
+            $logbookHariIni->is_reopened = true;
+            $logbookHariIni->save();
+            return redirect()->back()->with('success', 'Form berhasil dibuka kembali.');
+        }
+    
+        return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
     }
 
-    return redirect()->back()->with('error', 'Anda tidak memiliki izin untuk melakukan tindakan ini.');
-}
     public function dataPembimbing(){
          // Ambil data pembimbing beserta data pengguna yang terkait
         $pembimbing = Pembimbing::with('user')->get();
-        return view('admin.pages.pembimbing.index',compact('pembimbing'));
+        // Ambil data 'bagian' dari tabel pembimbing
+        $bagianList = Pembimbing::select('bagian')->distinct()->get();
+        return view('admin.pages.pembimbing.index',compact('pembimbing','bagianList'));
     }
     public function storePembimbing(Request $request) {
         // Validasi input
@@ -110,7 +158,56 @@ class PembimbingController extends Controller
         // Redirect kembali dengan pesan sukses
         return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
+    public function update(Request $request, $id)
+{
+    // Validasi input dari form
+    $request->validate([
+    'name' => 'required|string|max:255',
+    'username' => 'required|string|max:255|unique:users,username,' . $id,
+    'email' => 'required|email|max:255|unique:users,email,' . $id,
+    'bagian' => 'required|string|max:255',
+], [
+    'name.required' => 'Nama wajib diisi.',
+    'name.string' => 'Nama harus berupa teks.',
+    'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
     
+    'username.required' => 'Username wajib diisi.',
+    'username.string' => 'Username harus berupa teks.',
+    'username.max' => 'Username tidak boleh lebih dari 255 karakter.',
+    'username.unique' => 'Username sudah digunakan, silakan pilih username lain.',
+
+    'email.required' => 'Email wajib diisi.',
+    'email.email' => 'Format email tidak valid.',
+    'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
+    'email.unique' => 'Email sudah digunakan, silakan pilih email lain.',
+
+    'bagian.required' => 'Bagian wajib diisi.',
+    'bagian.string' => 'Bagian harus berupa teks.',
+    'bagian.max' => 'Bagian tidak boleh lebih dari 255 karakter.',
+]);
+
+    // Ambil data pembimbing berdasarkan ID
+    $pembimbing = Pembimbing::findOrFail($id);
+
+    // Update tabel users
+    $user = User::findOrFail($pembimbing->user_id);
+    $user->name = $request->input('name');
+    $user->username = $request->input('username');
+    $user->email = $request->input('email');
+
+    // Jika password diisi, maka update password
+    if ($request->filled('password')) {
+        $user->password = bcrypt($request->input('password'));
+    }
+    $user->save();  // Simpan perubahan di tabel users
+
+    // Update tabel pembimbing
+    $pembimbing->bagian = $request->input('bagian');
+    $pembimbing->save();  // Simpan perubahan di tabel pembimbing
+
+    return redirect()->back()->with('success', 'Data pembimbing berhasil diupdate.');
+}
+
     // public function view(){
     //  // Contoh untuk membuka kembali form
     // $peserta = Peserta::where('tanggal', $currentDate)->where('user_id', Auth::id())->first();

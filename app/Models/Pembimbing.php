@@ -15,5 +15,13 @@ class Pembimbing extends Model
        public function user()
          {
              return $this->belongsTo(User::class, 'user_id');
-         }           
+         }        
+        // Relasi ke Pengajuan
+        public function pengajuan() {
+            return $this->hasMany(Pengajuan::class);
+        }
+        public function peserta() {
+            return $this->hasMany(Peserta::class);
+        }
 }
+   

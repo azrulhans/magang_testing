@@ -13,64 +13,72 @@
         </div>
       </div>
       @endif
+        @if(Auth::user()->role == 'admin')
+        <div class="info">
+          <a href="#" class="d-block">Haii, {{ auth()->user()->name }}</a>
+        </div>
+      </div>
+      @endif
 
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-        @if(Auth::user()->role == 'admin')
-          <li class="nav-item has-treeview ">
-            <a href="{{asset('dashboard-utama')}}" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-              </p>
-            </a>
-          </li>
-          @endif
-        @if(Auth::user()->role == 'peserta')
-          <li class="nav-item has-treeview ">
-            <a href="{{asset('dashboard-peserta')}}" class="nav-link active">
-              <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>
-                Dashboard
-              </p>
-            </a>
-          </li>
-          @endif
-          @if(Auth::user()->role == 'admin')
-              <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-data-peserta-magang')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Peserta Magang</p>
-                </a>
-              </li>
-              @endif
-          @if(Auth::user()->role == 'admin')
-              <li class="nav-item has-treeview">
-                <a href="{{asset('data-pembimbing')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Data Pembimbing</p>
-                </a>
-              </li>
-              @endif
-              @if(Auth::user()->role == 'peserta')
-              <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-logbook')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Logbook</p>
-                </a>
-              </li>
-              @endif
-              @if(Auth::user()->role == 'peserta')
-              <li class="nav-item has-treeview">
-                <a href="{{asset('dashboard-data-profile')}}" class="nav-link">
-                  <i class="far fa-circle nav-icon"></i>
-                  <p>Profile</p>
-                </a>
-              </li>
-              @endif
+               @if(Auth::user()->role == 'admin')
+               <li class="nav-item has-treeview">
+                   <a href="{{ url('dashboard-utama') }}" class="nav-link {{ Request::is('dashboard-utama*') ? 'active' : '' }}">
+                       <i class="nav-icon fas fa-tachometer-alt"></i>
+                       <p>Dashboard</p>
+                   </a>
+               </li>
+           @endif
+           
+           @if(Auth::user()->role == 'peserta')
+               <li class="nav-item has-treeview">
+                   <a href="{{ url('dashboard-peserta') }}" class="nav-link {{ Request::is('dashboard-peserta*') ? 'active' : '' }}">
+                       <i class="nav-icon fas fa-tachometer-alt"></i>
+                       <p>Dashboard</p>
+                   </a>
+               </li>
+           @endif
+           
+           @if(Auth::user()->role == 'admin')
+               <li class="nav-item has-treeview">
+                   <a href="{{ url('dashboard-data-peserta-magang') }}" class="nav-link {{ Request::is('dashboard-data-peserta-magang*') ? 'active' : '' }}">
+                       <i class="far fa-circle nav-icon"></i>
+                       <p>Data Peserta Magang</p>
+                   </a>
+               </li>
+           @endif
+           
+           @if(Auth::user()->role == 'admin')
+               <li class="nav-item has-treeview">
+                   <a href="{{ url('data-pembimbing') }}" class="nav-link {{ Request::is('data-pembimbing*') ? 'active' : '' }}">
+                       <i class="far fa-circle nav-icon"></i>
+                       <p>Data Pembimbing</p>
+                   </a>
+               </li>
+           @endif
+           
+           @if(Auth::user()->role == 'peserta')
+               <li class="nav-item has-treeview">
+                   <a href="{{ url('dashboard-logbook') }}" class="nav-link {{ Request::is('dashboard-logbook*') ? 'active' : '' }}">
+                       <i class="far fa-circle nav-icon"></i>
+                       <p>Logbook</p>
+                   </a>
+               </li>
+           @endif
+           
+           @if(Auth::user()->role == 'peserta')
+               <li class="nav-item has-treeview">
+                   <a href="{{ url('dashboard-data-profile') }}" class="nav-link {{ Request::is('dashboard-data-profile*') ? 'active' : '' }}">
+                       <i class="far fa-circle nav-icon"></i>
+                       <p>Profile</p>
+                   </a>
+               </li>
+           @endif
+           
           <li class="nav-item has-treeview">
               <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();

@@ -29,7 +29,7 @@
         <div class="col-lg-12">
             <nav class="navbar navbar-expand-lg">
             <a class="navbar-brand" href="index.html">
-                <img src="assets/images/logo/kominfo.png" style="width: 50px; height: 50px;" alt="Logo" />
+                <img src="assets/images/logo/kominfo-panjang.png" style="width: 70px; height: 70px;" alt="Logo" />
             </a>
             <button
                 class="navbar-toggler"
@@ -130,8 +130,8 @@
             @if (Auth::check())
             Selamat Datang, {{ Auth::user()->name }}!
         @else
-            Selamat Datang di Website Kami! <br>
-            Magang Kominfo Dumai
+            Selamat Datang di Website Magang <br>
+            Diskominfo Kota Dumai
         @endif
             </h3>
             </div>
@@ -146,7 +146,7 @@
             data-wow-duration="1.3s"
             data-wow-delay="1.4s"
             >
-            <img  src="assets/images/foto/d_komin.png" alt="hero" />
+            <img src="assets/images/logo/kominfo-panjang.png" alt="hero" />
             </div >
             <!-- header hero image -->
         </div>
@@ -194,20 +194,12 @@
                 <h3 class="title">
                 Belajar bersama kami
                 </h3>
-            </div>
+            </div><br>
             <!-- section title -->
             <p class="text">
-               <p style="font-style: italic"> Kominfo adalah Kementerian Komunikasi dan Informatika mempunyai tugas menyelenggarakan
-                urusan pemerintahan di bidang komunikasi dan informatika untuk membantu Presiden 
-                dalam menyelenggarakan pemerintahan negara.</p><br>
-                <h5>Fasilitas:</h5>
-                <ul class="mt-2">
-                    <li>Ruang kerja yang nyaman</li>
-                    <li>Staff pekerja yang ramah</li>
-                    <li>Lingkungan yang positif</li>
-                </ul>
-                <p class="mt-2">Kami menjamin Mahasiswa atau siswa akan belajar banyak hal tentang  Kementerian Komunikasi dan Informatika ini </p>
-            </p>
+               <p style="font-weight: bold">Ingin belajar dan berkembang di bidang teknologi informasi? </p>
+               <p class="mt-2">Gabung bersama tim kami di Diskominfo Kota Dumai! Kamu akan mendapatkan kesempatan untuk belajar langsung dari para ahli dan terlibat dalam proyek-proyek menarik.</br> 
+                Temukan kami di Mal Pelayanan Publik, Teluk Binjai.Kota Dumai</p>
             </div>
             <!-- about content -->
         </div>
@@ -249,7 +241,7 @@
             </div>
             <!-- section title -->
             <div class="faq-container mt-4" >
-                <h5 class="mb-4">Frequently Asked Questions (FAQ)</h5>
+                <h5 class="mb-4">Pertanyaan</h5>
                 <div class="accordion" id="faqAccordion">
                     <div class="accordion-item">
                         <h2 class="accordion-header" id="headingOne">
@@ -259,7 +251,7 @@
                         </h2>
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Masuk ke halaman Daftar kemudian isi form registrasi data sekolah.
+                                Pihak kampus/sekolah melakukan Daftar kemudian isi form data kampus/sekolahnya
                             </div>
                         </div>
                     </div>
@@ -271,7 +263,7 @@
                         </h2>
                         <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Pihak perguruan tinggi/sekolah melakukan daftar lalu mengisi surat pengajuan dan data mahasiswa/siswa yang ingin PKL
+                                Setelah melakukan Daftar,Pihak kampus/sekolah melakukan Login lalu mengisi surat pengajuan dan data mahasiswa/siswa yang ingin PKL
                             </div>
                         </div>
                     </div>
@@ -283,7 +275,7 @@
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Proses pengajuan akan dilakukan oleh tata usaha paling lambat 1 minggu.
+                                Proses pengajuan akan dilakukan oleh TU Diskominfo Kota Dumai paling lambat 2 minggu
                             </div>
                         </div>
                     </div>
@@ -295,7 +287,7 @@
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Silahkan login ke dashboard perguruan tinggi/sekolah dan lihat di Panel Pengajuan jika sudah menginput data maka status otomatis akan nampil
+                                Silahkan login ke dashboard kampus/sekolah dan lihat di menu Pengajuan jika sudah menginput data maka status otomatis akan nampil
                             </div>
                         </div>
                     </div>
@@ -327,10 +319,10 @@
             data-wow-delay="0.2s"
             >
             <a class="logo" href="javascript:void(0)">
-                <img src="assets/images/logo/kominfo.png" style="width: 50px; height: 50px;"  />
-            </a>
-            <p class="text">
-                Website Magang Kominfo Kota Dumai
+                <img src="assets/images/logo/kominfo-panjang.png" style="width: 80px; height: 80px;"  />
+            </a><br>
+            <p class="text" style="font-size: 15px;"> 
+                DINAS KOMUNIKASI, INFORMATIKA, STATISTIK, DAN PERSANDIAN <br>
             </p>
             </div>
             <!-- footer about -->
@@ -356,9 +348,35 @@
             <div class="copyright d-sm-flex justify-content-between">
             <div class="copyright-content">
                 <p class="text">
-                Copyright &copy; 2024
-                <a href="#" rel="nofollow">Diskominfotiksan Kota Dumai</a>
+                    <a href="#" rel="nofollow">DINAS KOMUNIKASI, INFORMATIKA, STATISTIK, DAN PERSANDIAN</a><br>
+                    KOTA DUMAI&copy; 2024
                 </p>
+                <div class="contact-info">
+                    <div class="item">
+                        <i class="fas fa-globe fa-lg"></i>
+                        <span>diskominfo.dumaikota.go.id</span>
+                    </div>
+                    <div class="item">
+                        <i class="fas fa-envelope fa-lg"></i>
+                        <span>diskominfotiksan@dumaikota.go.id</span>
+                    </div>
+                    <div class="item">
+                        <i class="fab fa-facebook fa-lg"></i>
+                        <span>diskominfo.dumai</span>
+                    </div>
+                    <div class="item">
+                        <i class="fab fa-youtube fa-lg"></i>
+                        <span>diskominfokotadumai</span>
+                    </div>
+                    <div class="item">
+                        <i class="fab fa-twitter fa-lg"></i>
+                        <span>diskominfodumai</span>
+                    </div>
+                    <div class="item">
+                        <i class="fab fa-instagram fa-lg"></i>
+                        <span>kominfo.dumai</span>
+                    </div>
+                </div>
             </div>
             <!-- copyright content -->
             </div>
@@ -377,6 +395,37 @@
 <!--====== BACK TOP TOP PART START ======-->
 <a href="#" class="back-to-top"> <i class="lni lni-chevron-up"> </i> </a>
 <!--====== BACK TOP TOP PART ENDS ======-->
+<style>
+    .contact-info {
+        font-size: 15px;
+        color: white;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px; /* Jarak antara elemen */
+        align-items: center;
+    }
 
+    .contact-info .item {
+        display: flex;
+        align-items: center;
+        gap: 5px; /* Jarak antara ikon dan teks */
+    }
+</style>
+
+<script>
+    // Ambil semua link dengan class 'page-scroll'
+    const navLinks = document.querySelectorAll('.nav-item a.page-scroll');
+
+    // Loop semua link dan tambahkan event listener
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Hapus class 'active' dari semua link
+            navLinks.forEach(link => link.classList.remove('active'));
+            
+            // Tambahkan class 'active' ke link yang diklik
+            this.classList.add('active');
+        });
+    });
+</script>
 
 @endsection

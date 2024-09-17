@@ -10,14 +10,6 @@
                 <div class="col-sm-6">
                     <h1>Data Peserta Magang</h1>
                 </div>
-                <div class="col-sm-6">
-                    <ol class="breadcrumb float-sm-right">
-                        <li class="breadcrumb-item">
-                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Identitas Kampus</a>
-                      
-                        </li>
-                    </ol>
-                </div>
             </div>
         </div><!-- /.container-fluid -->
     </section>
@@ -25,28 +17,21 @@
         <div class="row">
             <div class="col-12">
                 <div class="card">
-                 <div class="card-header">
-    <div class="row align-items-center">
-        <!-- Tombol Tambah -->
-        <div class="col-md-6">
-            <a href="{{ asset('biodata-peserta') }}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
-                <i class="fas fa-plus-square"></i>
-            </a>
-        </div>
-        
+                 {{-- <div class="card-header"> --}}
         <!-- Form Pencarian -->
-        <div class="col-md-6 text-right">
-            <form method="GET" action="{{ route('cariPeserta') }}" class="d-inline-block">
-                <div class="form-group mb-0 d-inline-block mr-2">
-                    <input type="date" name="date" class="form-control" placeholder="Tanggal Surat" value="{{ request('date') }}">
-                </div>
-                <div class="d-inline-block">
-                    <button type="submit" class="btn btn-primary">Cari</button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+        {{-- <div class="col-md-6"> --}}
+            {{-- <div class="d-flex justify-content-start">
+                <form method="GET" action="{{ route('cariPeserta') }}" class="d-inline-block">
+                    <div class="form-group mb-0 d-inline-block mr-2">
+                        <input type="date" name="date" class="form-control" placeholder="Tanggal Surat" value="{{ request('date') }}">
+                    </div>
+                    <div class="d-inline-block">
+                        <button type="submit" class="btn btn-primary">Cari</button>
+                    </div>
+                </form>
+            </div> --}}
+        {{-- </div> --}}
+{{-- </div> --}}
 
                     
                     <!-- /.card-header -->
@@ -299,77 +284,101 @@ function toggleFormFields(id) {
                                 <th>Jenis Kelamin</th>
                                 <th>No Hp</th>
                                 <th>Email</th>
-                                <th>Bagian</th>
+                                <th>Nama Pembimbing</th>
+                                <th>Status</th> <!-- Tambah kolom status -->
                             </tr>
                         </thead>
-                        <tbody>
-                            @foreach(list_peserta($p->id) as $d)
-                            <tr>
-                                <td>{{ $loop->iteration }}</td>
-                                <td>{{ $d->nama }}</td>
-                                <td>{{ $d->nim }}</td>
-                                <td>{{ $d->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
-                                <td>{{ $d->alamat }}</td>
-                                <td>{{ $d->jk }}</td>
-                                <td>{{ $d->no_hp }}</td>
-                                <td>{{ $d->email }}</td>
-                                <td>
-                                    
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
+                        <form action="{{ route('savePembimbing') }}" method="POST">
+                            @csrf
+                            <tbody>
+                                @foreach(list_pesertah($p->id) as $d)
+                                <tr>
+                                    <td>{{ $loop->iteration }}</td>
+                                    <td>{{ $d->nama }}</td>
+                                    <td>{{ $d->nim }}</td>
+                                    <td>{{ $d->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
+                                    <td class="wide-columna">{{ $d->alamat }}</td>
+                                    <td>{{ $d->jk }}</td>
+                                    <td>{{ $d->no_hp }}</td>
+                                    <td>{{ $d->email }}</td>
+                    
+                                    <!-- Kolom pembimbing -->
+                                    <td class="wide-column">
+                                        <div class="form-group">
+                                            <select class="form-control select-bagian" name="pembimbing[{{ $d->id }}]" required>
+                                                <option value="" disabled {{ !$d->pembimbing_id ? 'selected' : '' }}>Pilih</option>
+                                                @foreach($pembimbingList as $pembimbing)
+                                                    <option value="{{ $pembimbing->id }}" {{ $d->pembimbing_id == $pembimbing->id ? 'selected' : '' }}>
+                                                        {{ $pembimbing->nama_pembimbing }} ({{ $pembimbing->bagian }})
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </td>
+                    
+                                    <!-- Kolom status -->
+                                    <td>
+                                        @if($d->pembimbing_id)
+                                            <span class="badge badge-success">Sudah Diisi</span>
+                                        @else
+                                            <span class="badge badge-warning">Belum Diisi</span>
+                                        @endif
+                                    </td>
+                                </tr>
+                                @endforeach
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </td>
+                                </tr>
+                            </tfoot>
+                        </form>
                     </table>
+                    
                 </div>
             </div>
         </div>
     </div>
 </div>
 @endforeach
-
-{{-- 
-
-<script>
-    function toggleFormFields(id) {
-    var statusElement = document.getElementById('status' + id);
-    var alasanDiv = document.getElementById('alasanDitolak' + id);
-    var suratDiv = document.getElementById('suratBalasan' + id);
-
-    var status = statusElement.value;
-
-    if (status === 'ditolak') {
-        alasanDiv.style.display = 'block';
-        suratDiv.style.display = 'none';
-        alasanDiv.querySelector('textarea').required = true;
-        suratDiv.querySelector('input').required = false;
-    } else if (status === 'diterima') {
-        alasanDiv.style.display = 'none';
-        suratDiv.style.display = 'block';
-        alasanDiv.querySelector('textarea').required = false;
-        suratDiv.querySelector('input').required = true;
-    } else {
-        alasanDiv.style.display = 'none';
-        suratDiv.style.display = 'none';
-        alasanDiv.querySelector('textarea').required = false;
-        suratDiv.querySelector('input').required = false;
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    var allStatusElements = document.querySelectorAll('[id^=status]');
-    allStatusElements.forEach(function(statusElement) {
-        var id = statusElement.id.replace('status', '');
-        toggleFormFields(id); // Inisialisasi saat halaman dimuat
-        statusElement.addEventListener('change', function() {
-            toggleFormFields(id);
+{{-- <script>
+    $(document).ready(function() {
+        $('.select-bagian').on('change', function() {
+            var bagian = $(this).val(); // Ambil nilai bagian
+            var pesertaId = $(this).data('id'); // Ambil ID peserta dari data attribute
+            
+            if (bagian) {
+                $.ajax({
+                    url: "{{ route('getPembimbingByBagian') }}", // Route yang sesuai
+                    type: "POST", 
+                    data: {
+                        bagian: bagian, 
+                        _token: '{{ csrf_token() }}' // Token CSRF Laravel
+                    },
+                    success: function(data) {
+                        console.log(data); // Debugging untuk melihat data yang diterima
+                        var pembimbingSelect = $('#select_pembimbing_' + pesertaId);
+                        pembimbingSelect.empty().append('<option value="" disabled selected>Pilih Pembimbing</option>'); 
+                        pembimbingSelect.prop('disabled', false);
+                        
+                        $.each(data, function(key, value) {
+                            pembimbingSelect.append('<option value="' + key + '">' + value + '</option>');
+                        });
+                    },
+                    error: function() {
+                        alert('Pembimbing tidak ditemukan');
+                    }
+                });
+            } else {
+                $('#select_pembimbing_' + pesertaId).prop('disabled', true).empty().append('<option value="" disabled selected>Pilih Pembimbing</option>');
+            }
         });
     });
-});
+</script> --}}
 
-    </script> --}}
-
-{{-- batas add peserta --}}
-
+{{-- 
 <!-- Modal for add surat -->
 <div class="modal fade" id="addCampusModal" tabindex="-1" role="dialog" aria-labelledby="addCampusModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -481,5 +490,28 @@ document.querySelector('.file.surat').addEventListener('change', function(e) {
 });
 </script>
 
-@endsection
+<style>
+    .wide-column {
+    width: 300px; /* Atur sesuai kebutuhan */
+}
+    .wide-columna {
+    width: 500px; /* Atur sesuai kebutuhan */
+}
 
+th[colspan="2"] {
+    width: 300px; /* Atur lebar kolom pada header */
+}
+
+</style>
+@endsection
+{{-- 
+@push('kode_js')
+    <script>
+        function tampilPembimbing(id) {
+            var id_bagian = $('#select_bagian_'+id).val();
+            alert(id_bagian);
+        }
+    </script> --}}
+
+{{-- 
+@endpush --}}

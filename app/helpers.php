@@ -15,6 +15,24 @@ function list_peserta($pengajuan_id) {
       ->get();
       return $data;
 }
+function list_pesertah($pengajuan_id) {
+
+  return DB::table('pengajuan')
+      ->join('jurusan', 'pengajuan.id_jurusan', '=', 'jurusan.id')
+      ->leftJoin('pembimbing', 'pengajuan.pembimbing_id', '=', 'pembimbing.id')
+      ->leftJoin('users', 'pembimbing.user_id', '=', 'users.id')
+      ->where('pengajuan.pengajuan_id', $pengajuan_id)
+      ->select(
+          'pengajuan.*', 
+          'jurusan.nama_jurusan',
+          'pembimbing.bagian', 
+          'users.name as nama_pembimbing'
+      )
+      ->get();
+}
+
+
+
 function list_jurusan($pengajuan_id) {
   return DB::table('pengajuan')
       ->join('jurusan', 'pengajuan.id_jurusan', '=', 'jurusan.id')

@@ -29,6 +29,7 @@ class User extends Authenticatable
         'password',
         'role',
         'username',
+        'bagian',
     ];
     // public function role(string $role): bool
     // {
@@ -99,5 +100,9 @@ class User extends Authenticatable
         public function pembimbing()
         {
             return $this->hasOne(Pembimbing::class, 'user_id');
+        }
+        public function jurusan()
+        {
+            return $this->belongsTo(Jurusan::class, 'id_jurusan'); // Misalkan 'id_jurusan' adalah foreign key di tabel user
         }
 }

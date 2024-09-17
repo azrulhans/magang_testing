@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Magang Kominfo Kota Dumai </title>
+  <title>Magang Kominfo Kota Dumai</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Font Awesome -->
@@ -55,7 +55,7 @@
     </form>
 
     <!-- Right navbar links -->
-    {{-- <ul class="navbar-nav ml-auto">
+    <ul class="navbar-nav ml-auto">
       <!-- Messages Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
@@ -113,8 +113,8 @@
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer">See All Messages</a>
         </div>
-      </li> --}}
-      {{-- <!-- Notifications Dropdown Menu -->
+      </li>
+      <!-- Notifications Dropdown Menu -->
       <li class="nav-item dropdown">
         <a class="nav-link" data-toggle="dropdown" href="#">
           <i class="far fa-bell"></i>
@@ -140,10 +140,10 @@
           <div class="dropdown-divider"></div>
           <a href="#" class="dropdown-item dropdown-footer">See All Notifications</a>
         </div>
-      </li> --}}
+      </li>
     </ul>
   </nav>
-  @include('admin/layouts/sidebar')
+  @include('kabid/layouts/sidebar')
   @include('sweetalert::alert')
   <!-- /.navbar -->
   @yield('content')
@@ -184,8 +184,6 @@
 <script src="dist/js/pages/dashboard.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="dist/js/demo.js"></script>
-
-@stack('kode_js')
 
 </body>
 </html>

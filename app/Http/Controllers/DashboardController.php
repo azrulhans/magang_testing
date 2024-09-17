@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Balasan;
 use App\Models\jurusan;
+use App\Models\Pembimbing;
 use App\Models\Pengajuan;
 use App\Models\PengajuanSekolah;
 use App\Models\User;
@@ -10,38 +11,63 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use PhpParser\Node\Expr\Cast\String_;
 
 class DashboardController extends Controller
 {
     public function dataPeserta(){
-      // Mendapatkan ID user yang sedang login
-      $userId = auth()->user()->id;
-
-      // Mengambil semua data dari tabel PengajuanSekolah
-      $peserta = PengajuanSekolah::with('balasan')->get();
-
-      // Pisahkan peserta yang belum diisi statusnya
+        // Mendapatkan ID user yang sedang login
+        $userId = auth()->user()->id;
+    
+        // Mengambil semua data dari tabel PengajuanSekolah
+        $peserta = PengajuanSekolah::with('balasan')->get();
+    
+        // Pisahkan peserta yang belum diisi statusnya
         $belumDiisi = $peserta->filter(function($p) {
-        return is_null($p->balasan);
+            return is_null($p->balasan);
         });
-
+    
         // Pisahkan peserta yang sudah diisi statusnya
         $sudahDiisi = $peserta->filter(function($p) {
-        return !is_null($p->balasan);
+            return !is_null($p->balasan);
         });
-
+    
         // Gabungkan peserta dengan yang belum diisi statusnya di atas
         $pesertaSorted = $belumDiisi->merge($sudahDiisi);
-        
-         // Ambil data Pengajuan dari semua user, dengan relasi jurusan
-          $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get(); 
+    
+        // Ambil data Pengajuan dari semua user, dengan relasi jurusan
+        $data = Pengajuan::where('user_id', $userId)->with('jurusan')->get(); 
         $balasan = DB::table('balasan')->get();
-
+    
         $user = User::findOrFail(Auth::id());
-       return view("admin.pages.peserta.index", compact('peserta','data','balasan','user'));
+    
+        // Fetch both nama_pembimbing and bagian
+        $pembimbingList = DB::table('pembimbing')
+            ->join('users', 'pembimbing.user_id', '=', 'users.id')
+            ->select('pembimbing.id', 'users.name as nama_pembimbing', 'pembimbing.bagian')
+            ->get();
+    
+        return view("admin.pages.peserta.index", compact('peserta', 'data', 'balasan', 'user', 'pembimbingList'));
     }
+    
+    public function savePembimbing(Request $request)
+{
+    foreach ($request->pembimbing as $pengajuan_id => $pembimbing_id) {
+        // Update data pengajuan untuk setiap peserta
+        DB::table('pengajuan')
+            ->where('id', $pengajuan_id)
+            ->update(['pembimbing_id' => $pembimbing_id,
+                   //  'user_id' => auth()->id() // Menyimpan user_id pengguna yang sedang login
+                    ]);
+    }
+    
+    // Redirect kembali dengan pesan sukses
+    return redirect()->back()->with('success', 'Pembimbing berhasil disimpan.');
+}
+
+
     public function cariPeserta(Request $request)
 {
     // Mendapatkan ID user yang sedang login
@@ -66,6 +92,27 @@ class DashboardController extends Controller
 
     return view("admin.pages.peserta.index", compact('peserta','data'));
 }
+public function getPembimbingByBagian(Request $request) {
+    // Validasi input bagian
+    $request->validate([
+        'bagian' => 'required|exists:pembimbing,bagian',
+    ]);
+
+    $bagianId = $request->input('bagian');
+    $pembimbingList = DB::table('pembimbing')
+        ->join('users', 'pembimbing.user_id', '=', 'users.id')
+        ->where('pembimbing.bagian', $bagianId)
+        ->pluck('users.name', 'users.id');
+    
+    // Log data untuk debugging
+    Log::info('Data Pembimbing:', $pembimbingList->toArray());
+
+    return response()->json($pembimbingList);
+}
+
+
+
+
 
     public function pengajuan(){
         $datas = new Pengajuan;
@@ -100,6 +147,7 @@ class DashboardController extends Controller
         $pengajuan->tgl_awal = $request->tgl_awal;
         $pengajuan->tgl_akhir = $request->tgl_akhir;
         $pengajuan->email = $request->email;
+        $pengajuan->user_id = auth()->id();
         $pengajuan->no_hp = $request->no_hp;
         $pengajuan->surat = $suratPath;
         $pengajuan->foto = $fotoPath;
@@ -120,7 +168,8 @@ class DashboardController extends Controller
         if (!auth()->user()->role === 'admin') {
             return redirect("dashboard-utama");
         }
-        return view("admin.pages.dashboard");
+        $user = User::findOrFail(Auth::id());
+        return view("admin.pages.dashboard",compact('user'));
      }
 
     //liat dashboard peserta
@@ -257,6 +306,12 @@ class DashboardController extends Controller
 
                     return redirect()->back()->with('error', "Email atau NIM sudah digunakan oleh peserta lain. Status pengajuan tetap 'diproses'.");
                 }
+              // Cek jika pengajuan sudah ada, inisialisasi sebelum digunakan
+                $pengajuan = Pengajuan::where('user_id', auth()->id())->first();
+                if ($pengajuan) {
+                    $pengajuan->user_id = auth()->id();
+                    $pengajuan->save();
+                }
                 // Buat akun pengguna baru
                 $user = new User();
                 $user->name = $peserta->nama; // Ambil dari nama di pengajuan
@@ -265,7 +320,13 @@ class DashboardController extends Controller
                 $user->password = bcrypt($peserta->nim); // Gunakan nim sebagai password
                 $user->role = 'peserta'; // Tetapkan role 'peserta'
                 $user->save();
-
+                  // Update tabel pengajuan dengan user_id dari user yang baru dibuat
+                  // Update tabel pengajuan dengan user_id dari user yang baru dibuat
+         
+               //  $pengajuan=  DB::table('pengajuan');
+                // ->where('id', auth()->id());
+              
+                //->update(['user_id' => $user->id])
                     // Opsional: Berikan role atau akses tertentu kepada user
                  // $user->role('peserta');
                     //$user->role = $request->role ('peserta');
@@ -324,9 +385,7 @@ class DashboardController extends Controller
     public function showProfile()
     {
         $user = User::findOrFail(Auth::id());
-        $peserta = Pengajuan::where('user_id', $user->id)
-        ->with('jurusan')
-        ->first(); 
+        $peserta = Pengajuan::where('pengajuan_id', Auth::user()->pengajuan_id)->first(); // Mengambil data pengajuan dari user yang login
           // Ambil data jurusan berdasarkan id_jurusan dari pengajuan
        //$jurusan = jurusan::find($peserta->id_jurusan);
         // Panggil helper untuk mendapatkan data pengajuan beserta jurusan

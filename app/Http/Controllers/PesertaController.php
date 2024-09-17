@@ -32,39 +32,48 @@ class PesertaController extends Controller
     
 
     public function store(Request $request)
-    {
-        $currentDate = Carbon::now()->format('Y-m-d'); // Tanggal hari ini
-        
-        // Cek apakah form sudah diisi untuk hari ini
-        $existingSubmission = Peserta::where('tanggal', $currentDate)
-                                     ->where('user_id', auth()->id())
-                                     ->first();
-        
-        // Validasi input
-        $request->validate([
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'required|string',
-            'dokumentasi' => 'nullable|file|mimes:jpg,png,jpeg|max:2048',
-        ]);
-    
-        $dokumentasiPath = $request->file('dokumentasi') ? $request->file('dokumentasi')->store('dokumentasi', 'public') : null;
-    
-        if ($existingSubmission) {
-            // Hapus data lama
-            $existingSubmission->delete();
-        }
-    
-        // Buat submission baru
-        $peserta = new Peserta();
-        $peserta->judul = $request->judul;
-        $peserta->deskripsi = $request->deskripsi;
-        $peserta->tanggal = $currentDate;
-        $peserta->user_id = auth()->id(); // Pastikan Anda menyimpan user_id
-        $peserta->dokumentasi = $dokumentasiPath;
-        $peserta->save();
-    
-        return redirect('dashboard-logbook')->with('success', 'Logbook Berhasil Ditambahkan');
+{
+    $currentDate = Carbon::now()->format('Y-m-d'); // Tanggal hari ini
+    // Cek apakah form sudah diisi untuk hari ini
+    $existingSubmission = Peserta::where('tanggal', $currentDate)
+                                 ->where('user_id', auth()->id())
+                                 ->first();
+    // Validasi input
+    $request->validate([
+        'judul' => 'required|string|max:255',
+        'deskripsi' => 'required|string',
+        'dokumentasi' => 'nullable|file|mimes:jpg,png,jpeg|max:2048',
+        //'pembimbing_id' => 'required'
+    ]);
+
+    $dokumentasiPath = $request->file('dokumentasi') ? $request->file('dokumentasi')->store('dokumentasi', 'public') : null;
+
+    if ($existingSubmission) {
+        // Hapus data lama
+        $existingSubmission->delete();
     }
+
+    // Ambil pengajuan_id dari tabel pengajuan berdasarkan user yang sedang login
+    $pengajuan = Pengajuan::where('user_id', auth()->id())->first();
+    $pengajuanId = $pengajuan ? $pengajuan->id : null;
+
+    // // Ambil pembimbing_id dari pengajuan
+    // $pembimbingId = $pengajuan ? $pengajuan->pembimbing_id : null;
+
+    // Buat submission baru
+    $peserta = new Peserta();
+    $peserta->judul = $request->judul;
+    $peserta->deskripsi = $request->deskripsi;
+    $peserta->tanggal = $currentDate;
+    $peserta->user_id = auth()->id(); // Pastikan Anda menyimpan user_id
+    $peserta->pembimbing_id = $request->pembimbing_id; // Ambil pembimbing_id dari pengajuan
+    $peserta->is_reopened = $request->has('is_reopened') ? 1 : 0;
+    $peserta->pengajuan_id = $pengajuanId; // Simpan pengajuan_id jika ditemukan
+    $peserta->dokumentasi = $dokumentasiPath;
+    $peserta->save();
+
+    return redirect('dashboard-logbook')->with('success', 'Logbook Berhasil Ditambahkan');
+}
     
     public function update(Request $request)
     {

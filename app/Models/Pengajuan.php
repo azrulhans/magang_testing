@@ -15,9 +15,8 @@ class Pengajuan extends Model
 
        public function user()
          {
-             return $this->belongsTo(User::class);
+             return $this->belongsTo(User::class,'id', 'user_id');
          }           
-         
       // Relasi ke model Jurusan
     public function jurusan()
     {
@@ -27,5 +26,13 @@ class Pengajuan extends Model
     {
         return $this->belongsTo(PengajuanSekolah::class, 'pengajuan_id');
     }
-
+    // Relasi ke Pembimbing
+    public function pembimbing() {
+        return $this->belongsTo(Pembimbing::class,'pembimbing_id');
+    }
+    public function peserta()
+    {
+        return $this->hasMany(Peserta::class, 'pengajuan_id');
+    }
+    
 }

@@ -6,11 +6,10 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card shadow-sm border-0">
-                    <div class="card-header bg-primary text-white text-center">
-                        <img src="{{ asset('assets/images/foto/d_komin.png') }}" alt="Kominfo Logo" style="height: 40px;" class="mr-2">
+                    <div class="card-header text-white text-center d-flex justify-content-center align-items-center">
+                        <img src="{{ asset('assets/images/logo/kominfo-panjang.png') }}" alt="Kominfo Logo" style="height: 80px;" class="mr-2">
                         <span>{{ __('Reset Password') }}</span>
                     </div>
-
                     <div class="card-body p-4">
                         @if (session('status'))
                             <div class="alert alert-success" role="alert">

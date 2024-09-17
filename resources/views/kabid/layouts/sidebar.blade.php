@@ -5,34 +5,38 @@
       <!-- Sidebar user panel (optional) -->
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          {{-- <img src="{{ asset('storage/fotos/' . $user->foto) }}" alt="Admin" class="rounded-circle p-9" style="width: 50px; height: 50px; object-fit: cover;"> --}}
+          {{-- <img src="{{ asset('storage/fotos/' . $user->foto) }}" alt="Foto" class="rounded-circle p-9" style="width: 50px; height: 50px; object-fit: cover;"> --}}
         </div>
         <div class="info">
-          <a href="#" class="d-block">Selamat datang, {{ auth()->user()->name }}</a>
+          <a href="#" class="d-block">Haii, {{ auth()->user()->name }}</a>
         </div>
       </div>
-
+  
       <!-- Sidebar Menu -->
       <nav class="mt-2">
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-         @if(Auth::user()->role == 'sekolah')
-         <li class="nav-item has-treeview">
-          <a href="{{ url('dashboard-sekolah') }}" class="nav-link {{ Request::is('dashboard-sekolah*') ? 'active' : '' }}">
+          <li class="nav-item has-treeview ">
+            <a href="{{asset('dashboard-kabid')}}" class="nav-link active">
               <i class="nav-icon fas fa-tachometer-alt"></i>
-              <p>Dashboard</p>
-          </a>
-      </li>
-           @endif
-              @if(Auth::user()->role == 'sekolah')
+              <p>
+                Dashboard
+              </p>
+            </a>
+          </li>
               <li class="nav-item has-treeview">
-                <a href="{{ url('pengajuan-surat-magang') }}" class="nav-link {{ Request::is('pengajuan-surat-magang*') ? 'active' : '' }}">
-                    <i class="far fa-circle nav-icon"></i>
-                    <p>Peserta Magang</p>
+                <a href="{{asset('dashboard-absensi-peserta')}}" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Absensi Peserta</p>
                 </a>
-            </li>
-              @endif
+              </li>
+              {{-- <li class="nav-item has-treeview">
+                <a href="#" class="nav-link">
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Profile</p>
+                </a>
+              </li> --}}
           <li class="nav-item has-treeview">
               <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();

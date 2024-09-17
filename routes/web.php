@@ -6,6 +6,7 @@ use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PesertaController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\KabidController;
 use App\Http\Controllers\PembimbingController;
 use App\Http\Controllers\PSekolahController;
 use App\Http\Controllers\SekolahController;
@@ -29,7 +30,7 @@ Route::delete('/dashboard-data-hapus/{id}', [DashboardController::class, 'hapusP
 
 //midleware berguna sebagai pembatas atau validasi antara sudah memiliki hak akses dan yg belum
 //prefix adalah pengelompokkan routing  ke satu jenis route
-Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing|kabin']], function () {
+Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing|kabid']], function () {
     //sekolah
     Route::get('dashboard-sekolah',         [SekolahController::class, 'index'])->name("dashboard-sekolah");
     Route::get('biodata-sekolah',           [SekolahController::class, 'biodata'])->name("biodata-sekolah");
@@ -58,6 +59,8 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
     Route::get('/dashboard-utama',                [DashboardController::class , 'dashboard'])->name("dashboard-utama")->middleware('role:admin');
     Route::get('/dashboard-data-peserta-magang',         [DashboardController::class , 'dataPeserta']);
     Route::get('/dashboard-cari-peserta',         [DashboardController::class , 'cariPeserta'])->name("cariPeserta");
+    Route::post('/save-pembimbing',              [DashboardController::class, 'savePembimbing'])->name('savePembimbing');
+    Route::post('/getPembimbingByBagian',           [DashboardController::class, 'getPembimbingByBagian'])->name('getPembimbingByBagian');
     Route::get('/dashboard-surat-view/{id}',     [DashboardController::class, 'view'])->name("dashboard-view");
     Route::get('/pengajuan-surat-create/{id}',  [DashboardController::class, 'create'])->name("pengajuan-sekolah-create");
     Route::post('/pengajuan-status-store',  [DashboardController::class, 'pengajuanStore'])->name("status.store");
@@ -81,10 +84,18 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
     Route::get('/dashboard-pembimbing',         [PembimbingController::class , 'dashboard']);
     Route::get('/data-pembimbing',         [PembimbingController::class , 'dataPembimbing']);
     Route::get('/dashboard-pembimbing-peserta',         [PembimbingController::class , 'index']);
+    Route::get('/dashboard-data-peserta',         [PembimbingController::class , 'peserta']);
     Route::post('/reopen-form/{id}',            [PembimbingController::class, 'reopenForm'])->name('reopen.form')->middleware('auth', 'role:pembimbing');
     Route::post('/pembimbing-store',            [PembimbingController::class, 'storePembimbing'])->name('pembimbing.store');
      Route::delete('/pembimbing-delete/{id}',    [PembimbingController::class, 'hapusPembimbing'])->name("pembimbing.delete");
+     Route::put('/pembimbing/{id}',              [PembimbingController::class, 'update'])->name('pembimbing.update');
 
+
+     //routing kabid
+     Route::get('/dashboard-kabid',         [KabidController::class, 'index'])->middleware('role:kabid');
+     Route::get('/dashboard-absensi-peserta',         [KabidController::class, 'absensi']);
+
+     
     //yang lama
     Route::get("status-pengajuan", [DashboardController::class, 'statusPengajuan'])->name("status.pengajuan");
 

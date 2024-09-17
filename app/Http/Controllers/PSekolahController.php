@@ -6,6 +6,7 @@ use App\Models\Balasan;
 use App\Models\jurusan;
 use App\Models\Pengajuan;
 use App\Models\PengajuanSekolah;
+use App\Models\Peserta;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -122,9 +123,8 @@ class PSekolahController extends Controller
 
        // return view('sekolah.pages.psurat.index', compact('pengajuan','data'));
     
-    public function pengajuanPeserta(Request $request) {
-     //  dd($request->all());
-     
+       public function pengajuanPeserta(Request $request) {
+        // Validasi input
         $request->validate([
             'nama'          => 'required|string|max:255',
             'jk'            => 'required|in:Laki-laki,Perempuan',
@@ -134,57 +134,38 @@ class PSekolahController extends Controller
             'alamat'        => 'required|string',
             'jurusan'       => 'required|string|max:255',
         ]);
+    
         // Simpan jurusan ke dalam tabel jurusan jika belum ada
-         $jurusan = jurusan::firstOrCreate([
-            'nama_jurusan' => $request->jurusan], // Kondisi untuk mencari apakah jurusan sudah ada
-    );
-        // DB::table('pengajuan')->insert([
-        //     'nama'            => $request->nama,
-        //     'nim'             => $request->nim,
-        //     'alamat'          => $request->alamat,
-        //     'jk'              => $request->jk,  
-        //     'no_hp'           => $request->no_hp,
-        //     'email'           => $request->email,
-        //     'id_jurusan'      => $jurusan->id,
-        //     'pengajuan_id'    => $request->pengajuan_id,
-        // ]);
-      // Langkah 1: Cari data di tabel PengajuanSekolah berdasarkan field id
-    $pengajuanSekolah = PengajuanSekolah::find($request->pengajuan_id);
-
-    if ($pengajuanSekolah) {
-        // Langkah 2: Simpan data ke tabel Pengajuan
-        $pengajuan = new Pengajuan();
-        $pengajuan->nama = $request->nama;
-        $pengajuan->nim = $request->nim;
-        $pengajuan->alamat = $request->alamat;
-        $pengajuan->jk = $request->jk;
-        $pengajuan->no_hp = $request->no_hp;
-        $pengajuan->id_jurusan = $jurusan->id;
-        $pengajuan->email = $request->email;
-
-        // Isi pengajuan_id di tabel Pengajuan sesuai dengan id dari PengajuanSekolah
-        $pengajuan->pengajuan_id  = $pengajuanSekolah->id;
-        $pengajuan->save();
-    } else {
-        // Handle jika data di tabel PengajuanSekolah tidak ditemukan
-        return redirect()->back()->with('error', 'PengajuanSekolah dengan pengajuan_id tersebut tidak ditemukan.');
+        $jurusan = jurusan::firstOrCreate([
+            'nama_jurusan' => $request->jurusan
+        ]);
+    
+        // Langkah 1: Cari data di tabel PengajuanSekolah berdasarkan field id
+        $pengajuanSekolah = PengajuanSekolah::find($request->pengajuan_id);
+    
+        if ($pengajuanSekolah) {
+            // Langkah 2: Simpan data ke tabel Pengajuan
+            $pengajuan = new Pengajuan();
+            $pengajuan->nama = $request->nama;
+            $pengajuan->nim = $request->nim;
+            $pengajuan->alamat = $request->alamat;
+            $pengajuan->jk = $request->jk;
+            $pengajuan->no_hp = $request->no_hp;
+            $pengajuan->id_jurusan = $jurusan->id;
+            $pengajuan->email = $request->email;
+    
+            // Isi pengajuan_id di tabel Pengajuan sesuai dengan id dari PengajuanSekolah
+            $pengajuan->pengajuan_id = $pengajuanSekolah->id;
+            $pengajuan->save();
+    
+        } else {
+            // Handle jika data di tabel PengajuanSekolah tidak ditemukan
+            return redirect()->back()->with('error', 'Data tidak ditemukan');
+        }
+    
+        return redirect()->back()->with('success', 'Data berhasil disimpan.');
     }
-
-    // Redirect atau berikan respons yang sesuai
-    return redirect()->back()->with('success', 'Data pengajuan berhasil disimpan.');
-
-    //  $pengajuan = Pengajuan::create([
-    //         'nama'            => $request->nama,
-    //         'nim'             => $request->nim,
-    //         'alamat'          => $request->alamat,
-    //         'jk'              => $request->jk,  
-    //         'no_hp'           => $request->no_hp,
-    //         'email'           => $request->email,
-    //         'id_jurusan'     => $jurusan->id,
-    //         'user_id'         => Auth::id(),
-    //     ]);
-        return redirect()->back()->with('success', 'Pengajuan Berhasil Tersimpan');;
-    }
+    
    
   
     public function ajukan(Request $request)

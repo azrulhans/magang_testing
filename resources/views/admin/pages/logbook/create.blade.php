@@ -32,6 +32,9 @@
         <form action="{{ isset($logbook) ? route('logbook.update', $logbook->id) : route('logbook.store') }}" method="post" enctype="multipart/form-data">
           @csrf
           @if(isset($logbook)) @method('PUT') @endif
+          <div class="form-group">
+            <input type="text" name="pembimbbing_id" id="inputName" class="form-control" value="{{ $logbook->pembimbbing_id ?? '' }}">
+          </div>
         <div class="card-body">
           <div class="form-group">
             <label for="inputName">Judul Kegiatan</label>
@@ -51,12 +54,12 @@
             </div>
         </div>
       </div>
-    </div>
-  </div>
+    </div>    
+  </div>  
   <div class="row mb-3">
       <div class="col-12 d-flex justify-content-center">
           <a href="{{ asset('dashboard-logbook') }}" class="btn btn-secondary mr-2">Kembali</a>
-          <input type="submit" value="{{ isset($logbook) ? 'Update Logbook' : 'Create new Logbook' }}" class="btn btn-success">
+          <input type="submit" value="{{ isset($logbook) ? 'Update Logbook' : 'Tambah Logbook' }}" class="btn btn-success">
       </div>
   </div>
 </form>

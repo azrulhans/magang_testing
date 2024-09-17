@@ -34,16 +34,6 @@
         </div>
         
         <!-- Form Pencarian -->
-        <div class="col-md-6 text-right">
-            <form method="GET" action="#" class="d-inline-block">
-                <div class="form-group mb-0 d-inline-block mr-2">
-                    <input type="date" name="date" class="form-control" placeholder="Tanggal Surat" value="{{ request('date') }}">
-                </div>
-                <div class="d-inline-block">
-                    <button type="submit" class="btn btn-primary">Cari</button>
-                </div>
-            </form>
-        </div>
     </div>
 </div>
 
@@ -71,7 +61,7 @@
                         <td>{{ $p->user->email }}</td>
                         <td>{{ $p->bagian }}</td>
                         <td>
-                        <a href="#" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#createModal">
+                        <a href="#" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal{{$p->id}}">
                             <i class="fas fa-edit">edit</i> 
                             </a>
                             <!-- Button trigger modal -->
@@ -79,8 +69,8 @@
                                     <i class="fas fa-trash"></i>hapus</a>
                         </td>
                     </tr>
-                    @endforeach
                 </tbody>
+              @endforeach
             </table>
         </div>
         <!-- /.card-body -->
@@ -90,6 +80,87 @@
 </div>
 </section>
 </div>
+  <!-- Modal Hapus -->
+@foreach($pembimbing as $p)
+<div class="modal fade" id="exampleModal{{ $p->id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $p->id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel{{ $p->id }}">Hapus Pembimbing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                Apakah Anda yakin akan menghapus data {{ $p->user->name }}?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+                <form action="{{ route('pembimbing.delete', $p->user_id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Hapus</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@endforeach
+
+<!-- Modal Edit Pembimbing -->
+@foreach($pembimbing as $p)
+<div class="modal fade" id="editModal{{ $p->id }}" tabindex="-1" role="dialog" aria-labelledby="editModalLabel{{ $p->id }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editModalLabel{{ $p->id }}">Edit Pembimbing</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('pembimbing.update', $p->id) }}" method="POST">
+                @csrf
+                @method('PUT') <!-- Penting untuk metode update -->
+                <div class="modal-body">
+                    <!-- Data dari tabel users -->
+                    <div class="form-group">
+                        <label for="nama_pembimbing{{ $p->id }}">Nama</label>
+                        <input type="text" class="form-control" id="nama_pembimbing{{ $p->id }}" name="name" value="{{ $p->user->name }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="username_pembimbing{{ $p->id }}">Username</label>
+                        <input type="text" class="form-control" id="username_pembimbing{{ $p->id }}" name="username" value="{{ $p->user->username }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email_pembimbing{{ $p->id }}">Email</label>
+                        <input type="email" class="form-control" id="email_pembimbing{{ $p->id }}" name="email" value="{{ $p->user->email }}" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bagian_pembimbing{{ $p->id }}">Bagian</label>
+                        <select class="form-control" id="bagian_pembimbing{{ $p->id }}" name="bagian" required>
+                            <option value="" disabled>Pilih Bagian</option>
+                            @foreach($bagianList as $bagian)
+                                <option value="{{ $bagian->bagian }}" {{ $p->bagian == $bagian->bagian ? 'selected' : '' }}>
+                                    {{ $bagian->bagian }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="password_pembimbing{{ $p->id }}">Password</label>
+                        <input type="password" class="form-control" id="password_pembimbing{{ $p->id }}" name="password">
+                        <small class="text-muted">Kosongkan jika tidak ingin mengganti password.</small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@endforeach
 
 <!-- Modal for add pembimbing -->
 <div class="modal fade" id="addCampusModal" tabindex="-1" role="dialog" aria-labelledby="addCampusModalLabel" aria-hidden="true">
@@ -101,7 +172,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{route('pembimbing.store')}}" method="POST">
+            <form action="{{ route('pembimbing.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -121,8 +192,13 @@
                         <input type="password" class="form-control" id="no_lldikti" name="password" required>
                     </div>
                     <div class="form-group">
-                        <label for="no_lldikt">Bagian</label>
-                        <input type="text" class="form-control" id="no_lldikt" name="bagian" required>
+                        <label for="bagian">Bagian</label>
+                        <select class="form-control" id="bagian" name="bagian" required>
+                            <option value="" disabled selected>Pilih Bagian</option>
+                            @foreach($bagianList as $bagian)
+                                <option value="{{ $bagian->bagian }}">{{ $bagian->bagian }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -130,35 +206,13 @@
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
             </form>
+            
         </div>
     </div>
 </div>
 {{-- batas modal tambah --}}
 
-<!-- Modal Hapus -->
-@foreach($pembimbing as $p)
-<div class="modal fade" id="exampleModal{{ $p->id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ $p->id }}" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel{{ $p->id }}">Hapus Pembimbing</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                Apakah anda yakin akan menghapus data {{ $p->user->name }}?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Tutup</button>
-                <form action="{{ route('pembimbing.delete', $p->user_id) }}" method="POST" style="display:inline;">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger">Hapus</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-@endforeach
 
-{{-- batas modal hapus --}}
+
+
 @endsection

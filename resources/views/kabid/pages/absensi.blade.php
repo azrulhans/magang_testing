@@ -1,4 +1,4 @@
-@extends("pembimbing.layouts.main")
+@extends("kabid.layouts.main")
 @section('content')
 @include('sweetalert::alert')
 
@@ -7,12 +7,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Logbook Peserta</h1>
+                    <h1>Absensi Peserta</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
-                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Logbook Peserta</a>
+                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Logbook</a>
                         </li>
                     </ol>
                 </div>
@@ -30,18 +30,18 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
-                                    <th>judul</th>
-                                    <th>Tanggal</th>
-                                    <th>Deskripsi</th>
-                                    <th>Dokumentasi</th>
-                                    <th>aksi</th>
+                                    <th>Bagian</th>
+                                    <th>Pembimbing</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Tanggal Akhir</th>
+                                    <th>Kehadiran</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($peserta as $p)
+                                {{-- @foreach($peserta as $p)
                                 <tr>
                                     <td>{{$loop->iteration}} </td>
-                                    <td> {{ $p->nama ?? 'Nama tidak ditemukan' }}</td>
+                                    <td> {{ $p->user->name ?? 'Nama tidak ditemukan' }}</td>
                                     <td> {{$p->judul}}  </td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}
@@ -58,7 +58,7 @@
                                         @if(!$p->is_reopened)
                              <form action="{{ route('reopen.form', $p->id) }}" method="POST" style="display:inline;">
                                     @csrf
-                             <button type="submit" class="btn btn-sm btn-primary">
+                                 <button type="submit" class="btn btn-sm btn-primary">
                         <i class="fas fa-check"></i> Buka Kembali
                     </button>
                 </form>
@@ -67,12 +67,12 @@
                     <i class="fas fa-check"></i> Sudah Dibuka
                 </button>
             @endif
-                                        {{-- <a href="#" class="btn btn-sm btn-success">
+                                        <a href="#" class="btn btn-sm btn-success">
                                             <i class="fas fa-eye"></i> 
-                                            </a> --}}
-                                    </td>
-                                </tr>
-                                @endforeach
+                                            </a>
+                                    </td> --}}
+                                {{-- </tr>
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
@@ -84,25 +84,5 @@
     </section>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Konfirmasi Hapus</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                Apakah Anda yakin ingin menghapus item ini?
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn btn-danger">Hapus</button>
-            </div>
-        </div>
-    </div>
-</div>
 </div>
 @endsection

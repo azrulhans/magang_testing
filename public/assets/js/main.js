@@ -19,10 +19,10 @@
 
     if (window.pageYOffset > sticky) {
       header_navbar.classList.add("sticky");
-      logo.src = "assets/images/logo/kominfo.png";
+      logo.src = "assets/images/logo/kominfo-panjang.png";
     } else {
       header_navbar.classList.remove("sticky");
-      logo.src = "assets/images/logo/kominfo.png";
+      logo.src = "assets/images/logo/kominfo-panjang.png";
     }
 
     // show or hide the back-top-top button

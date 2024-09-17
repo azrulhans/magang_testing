@@ -32,15 +32,6 @@
                                                             ->first();
                         @endphp
                     
-                    @if($logbookHariIni)
-                    <p>Logbook ditemukan</p>
-                    <p>ID Logbook: {{ $logbookHariIni->id }}</p>
-                    <p>Tanggal: {{ $logbookHariIni->tanggal }}</p>
-                    <p>is_reopened: {{ $logbookHariIni->is_reopened }}</p>
-                @else
-                    <p>Logbook tidak ditemukan untuk user: {{ auth()->user()->id }} pada tanggal: {{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
-                @endif
-                <p>Tanggal hari ini: {{ \Carbon\Carbon::now()->format('Y-m-d') }}</p>
 
                         @if(!$logbookHariIni)
                         <!-- Tombol Tambah Logbook hanya muncul jika belum ada logbook hari ini atau form telah dibuka kembali -->
