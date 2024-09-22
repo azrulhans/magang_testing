@@ -30,49 +30,33 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
+                                    <th>Nim</th>
+                                    <th>Jurusan</th>
                                     <th>Bagian</th>
-                                    <th>Pembimbing</th>
                                     <th>Tanggal Mulai</th>
                                     <th>Tanggal Akhir</th>
                                     <th>Kehadiran</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                {{-- @foreach($peserta as $p)
+                             @foreach($pengajuan as $p)
                                 <tr>
                                     <td>{{$loop->iteration}} </td>
-                                    <td> {{ $p->user->name ?? 'Nama tidak ditemukan' }}</td>
-                                    <td> {{$p->judul}}  </td>
+                                    <td> {{ $p->nama ?? 'Nama tidak ditemukan' }}</td>
+                                    <td> {{$p->nim}}  </td>
                                     <td>
-                                        {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}
+                                        {{$p->nama_jurusan}}
                                     </td>
-                                    <td> {{$p ->deskripsi}} </td>
+                                    <td>
+                                        {{$p->bagian}}
+                                    </td>
+                                    <td> {{$p ->tgl_mulai}} </td>
                                     <td> 
-                                        @if($p->dokumentasi)
-                                        <img src="{{ asset('storage/' . $p->dokumentasi) }}" alt="Dokumentasi    {{ $p->judul }}" width="80" height="80">
-                                    @else
-                                        Tidak ada dokumentasi
-                                    @endif    
+                                        {{$p ->tgl_selesai}} 
                                     </td>
-                                    <td>
-                                        @if(!$p->is_reopened)
-                             <form action="{{ route('reopen.form', $p->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                 <button type="submit" class="btn btn-sm btn-primary">
-                        <i class="fas fa-check"></i> Buka Kembali
-                    </button>
-                </form>
-            @else
-                <button class="btn btn-sm btn-secondary" disabled>
-                    <i class="fas fa-check"></i> Sudah Dibuka
-                </button>
-            @endif
-                                        <a href="#" class="btn btn-sm btn-success">
-                                            <i class="fas fa-eye"></i> 
-                                            </a>
-                                    </td> --}}
-                                {{-- </tr>
-                                @endforeach --}}
+                                    <td>{{$p->kehadiran}} </td>
+                                 </tr>
+                                @endforeach 
                             </tbody>
                         </table>
                     </div>

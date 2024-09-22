@@ -13,39 +13,25 @@ use Illuminate\Support\Facades\DB;
 class PembimbingController extends Controller
 {
     public function index(){
+         // Mendapatkan id pengguna yang sedang login
+         $userId = auth()->user()->id;
         $peserta = DB::table('pengajuan')
-     //   ->join('peserta', 'pengajuan.pengajuan_id', '=', 'peserta.pengajuan_id')
+        ->join('pembimbing', 'pengajuan.pembimbing_id', '=', 'pembimbing.id')
         ->join('peserta', 'pengajuan.pembimbing_id', '=', 'peserta.pembimbing_id')
         ->select('pengajuan.id', 'pengajuan.nama','peserta.is_reopened', 'peserta.judul', 'peserta.deskripsi', 'peserta.tanggal', 'peserta.dokumentasi')
-        ->where('pengajuan.pembimbing_id', 8)
+        ->where('pembimbing.user_id', $userId)
         ->get();
     
                                                                                                         
     return view('pembimbing.pages.v_logbook',compact('peserta'));
     }
     public function peserta(){
-          // Dapatkan ID pembimbing dari user yang sedang login
-    // $user_id = auth()->user()->id;
-
-    // // Cari pembimbing berdasarkan user_id
-    // $pembimbing = DB::table('pembimbing')->where('user_id', $user_id)->first();
-    // //dd($pembimbing);
-    // // Ambil data peserta berdasarkan id_pembimbing
-    // if ($pembimbing) {
-    //     $data = DB::table('pengajuan')
-    //         ->join('users', 'pengajuan.user_id', '=', 'users.id')
-    //         ->join('jurusan', 'pengajuan.id_jurusan', '=', 'jurusan.id')
-    //         ->where('pengajuan.pembimbing_id', $pembimbing->id)
-    //         ->select('users.name', 'pengajuan.nim', 'jurusan.nama_jurusan', 'pengajuan.jk', 'pengajuan.no_hp', 'pengajuan.alamat')
-    //         ->get();
-    // } else {
-    //     $data = []; // Jika tidak ada pembimbing, kosongkan data
-    // }
+        $userId = auth()->user()->id;
     $pembimbing = DB::table('pengajuan')
     ->join('jurusan', 'pengajuan.id_jurusan', '=', 'jurusan.id')
     ->join('pembimbing', 'pengajuan.pembimbing_id', '=', 'pembimbing.id')
     ->select('pengajuan.id', 'pengajuan.nama', 'pengajuan.nim', 'pengajuan.jk', 'pengajuan.no_hp', 'pengajuan.alamat', 'jurusan.nama_jurusan', 'pembimbing.bagian')
-    ->where('pengajuan.pembimbing_id', 8)
+    ->where('pembimbing.user_id', $userId)
     ->get();
 
     return view('pembimbing.pages.v_peserta',compact('pembimbing'));
@@ -208,6 +194,18 @@ class PembimbingController extends Controller
     return redirect()->back()->with('success', 'Data pembimbing berhasil diupdate.');
 }
 
+public function viewLogbook(Request $request){
+    $id = $request->input('id');
+    $pembimbing = DB::table('peserta')
+    ->join('pengajuan', 'peserta.nim', '=', 'pengajuan.nim')
+    ->where('peserta.nim', $id)
+    ->select('peserta.*', 'pengajuan.nama')
+    ->get();
+
+    // $pembimbing = peserta::where('nim',$id)->get();
+    
+    return view('pembimbing.pages.v_view', compact('pembimbing'));
+ }
     // public function view(){
     //  // Contoh untuk membuka kembali form
     // $peserta = Peserta::where('tanggal', $currentDate)->where('user_id', Auth::id())->first();

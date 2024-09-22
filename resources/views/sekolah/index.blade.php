@@ -2,93 +2,73 @@
 @section("content")
 
 <!-- Content Wrapper. Contains page content -->
- <div class="content-wrapper">
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <div class="content-header">
-      <div class="container-fluid">
-        <div class="row mb-2">
-          <div class="col-sm-6">
-            <h1 class="m-0 text-dark">Dashboard</h1>
-          </div><!-- /.col -->
-          <div class="col-sm-6">
-            <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="#">Home</a></li>
-              <li class="breadcrumb-item active">Dashboard</li>
-            </ol>
-          </div><!-- /.col -->
-        </div><!-- /.row -->
-      </div><!-- /.container-fluid -->
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-12">
+                    <h1 class="m-0 text-dark text-center">Selamat Datang di Dashboard Sekolah/Kampus</h1>
+                    <p class="text-center" style="font-size: 18px; color: #6c757d;">
+                        Berikut adalah ringkasan informasi data yang telah Anda input.
+                    </p>
+                </div><!-- /.col -->
+            </div><!-- /.row -->
+        </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
 
     <!-- Main content -->
     <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
+        <div class="container-fluid">
+            <!-- Row for Stat boxes -->
+            <div class="row">
+                <!-- Box 1: Data Surat -->
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="small-box bg-info" style="
+                        border-radius: 10px; 
+                        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;">
+                        <div class="inner" style="
+                            padding: 30px; 
+                            text-align: center;">
+                            <h3 style="font-size: 36px; margin-bottom: 10px;">{{ $jumlahSurat }}</h3>
+                            <p style="font-size: 18px;">Data Surat</p>
+                        </div>
+                        <div class="icon" style="
+                            position: absolute; 
+                            top: 20px; 
+                            right: 20px; 
+                            font-size: 60px;">
+                            <i class="ion ion-document-text"></i>
+                        </div>
+                    </div>
+                </div>
 
-                <p>Data Peserta</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+                <!-- Box 2: Data Peserta Magang -->
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                    <div class="small-box bg-success" style="
+                        border-radius: 10px; 
+                        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+                        overflow: hidden;">
+                        <div class="inner" style="
+                            padding: 30px; 
+                            text-align: center;">
+                            <h3 style="font-size: 36px; margin-bottom: 10px;">{{ $jumlahPeserta }}</h3>
+                            <p style="font-size: 18px;">Data Peserta Magang</p>
+                        </div>
+                        <div class="icon" style="
+                            position: absolute; 
+                            top: 20px; 
+                            right: 20px; 
+                            font-size: 60px;">
+                            <i class="ion ion-person-add"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                <p>Data Peserta Magang</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-
-                <p>Unique Visitors</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-        </div>
-      </div><!-- /.container-fluid -->
+        </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
-  </div>
+</div>
 @endsection

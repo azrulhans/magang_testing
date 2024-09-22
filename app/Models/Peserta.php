@@ -10,14 +10,14 @@ class Peserta extends Model
     use HasFactory;
     protected $table = 'peserta';
 
-    protected $fillable = ['id','judul', 'deskripsi', 'tanggal', 'dokumentasi', 'status', 'user_id','is_reopened','pembimbing_id'];
+    protected $fillable = ['id','judul', 'deskripsi', 'tanggal','nim', 'dokumentasi','pembimbing_id', 'status', 'user_id','is_reopened','pengajuan_id','pembimbing_id'];
     public function getTanggalAttribute($value)
     {
         return \Carbon\Carbon::parse($value)->format('Y-m-d');
     }
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id', 'id');
+        return $this->belongsTo(User::class);
     }
     
     // Model Peserta.php
@@ -27,7 +27,7 @@ class Peserta extends Model
     }
     public function pengajuan()
     {
-        return $this->belongsTo(Pengajuan::class, 'pengajuan_id');
+        return $this->belongsTo(Pengajuan::class,'pembimbing_id');
     }
     
 }

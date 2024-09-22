@@ -58,13 +58,14 @@ class PSekolahController extends Controller
         // Simpan data ke database
         $suratPath = $request->file('surat') ? $request->file('surat')->store('surats', 'public') : null;
       
-      DB::table('pengajuansekolah')->insert([
+     $idPengajuan = DB::table('pengajuansekolah')->insert([
             'no_surat'          => $request->no_surat,
             'tgl_surat'         => $request->tgl_surat,
             'tgl_mulai'         => $request->tgl_mulai,
             'tgl_selesai'       => $request->tgl_selesai,
             'surat'             => $suratPath,
             'user_id'          => Auth::id(),
+
             ]);
         // Redirect kembali dengan pesan sukses
           // Panggil function pengajuanPeserta dengan $pengajuan_id
@@ -156,8 +157,9 @@ class PSekolahController extends Controller
     
             // Isi pengajuan_id di tabel Pengajuan sesuai dengan id dari PengajuanSekolah
             $pengajuan->pengajuan_id = $pengajuanSekolah->id;
+             // Tambahkan user_id dari pengguna yang sedang login
+           $pengajuan->user_id = auth()->user()->id;
             $pengajuan->save();
-    
         } else {
             // Handle jika data di tabel PengajuanSekolah tidak ditemukan
             return redirect()->back()->with('error', 'Data tidak ditemukan');
@@ -188,7 +190,7 @@ class PSekolahController extends Controller
     $pengajuan->tgl_selesai = $validated['tgl_selesai'];
     $pengajuan->surat = $validated['surat']; // Menyimpan data surat yang dikirim dari view
     $pengajuan->save();
-
+   
     return response()->json(['message' => 'Pengajuan berhasil'], 200);
 }
 

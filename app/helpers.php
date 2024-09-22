@@ -15,6 +15,7 @@ function list_peserta($pengajuan_id) {
       ->get();
       return $data;
 }
+
 function list_pesertah($pengajuan_id) {
 
   return DB::table('pengajuan')

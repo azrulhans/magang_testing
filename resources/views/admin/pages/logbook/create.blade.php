@@ -23,19 +23,20 @@
     <div class="col-md-12">
       <div class="card card-primary">
         <div class="card-header">
-          <h3 class="card-title">{{ isset($logbook) ? 'Update' : 'Tambah' }} Logbook</h3>
+          <h3 class="card-title">Logbook</h3>
           <div class="card-tools">
             <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Collapse">
               <i class="fas fa-minus"></i></button>
           </div>
         </div>
-        <form action="{{ isset($logbook) ? route('logbook.update', $logbook->id) : route('logbook.store') }}" method="post" enctype="multipart/form-data">
+        <form action= "{{route('logbook.store')}}"  method='post' enctype="multipart/form-data">
           @csrf
-          @if(isset($logbook)) @method('PUT') @endif
-          <div class="form-group">
-            <input type="text" name="pembimbbing_id" id="inputName" class="form-control" value="{{ $logbook->pembimbbing_id ?? '' }}">
-          </div>
+          @if(isset($logbook)) @method('post') @endif
         <div class="card-body">
+          <div class="form-group">
+            {{-- nim peserta --}}
+            <input type="hidden" name="nim" id="inputName" class="form-control" value="{{ auth()->user()->username }}">
+          </div>
           <div class="form-group">
             <label for="inputName">Judul Kegiatan</label>
             <input type="text" name="judul" id="inputName" class="form-control" value="{{ $logbook->judul ?? '' }}">

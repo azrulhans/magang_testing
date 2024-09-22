@@ -38,7 +38,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($peserta as $p)
+                                @foreach($peserta as $pese => $p)
                                 <tr>
                                     <td>{{$loop->iteration}} </td>
                                     <td> {{ $p->nama ?? 'Nama tidak ditemukan' }}</td>

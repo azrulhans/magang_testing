@@ -11,11 +11,13 @@ class Pengajuan extends Model
     protected $table = 'pengajuan';
 
     protected $fillable = ['id','nama', 'jurusan', 'asal_sekolah', 'nim', 'tgl_awal', 'tgl_akhir',
-                         'email','user_id', 'no_hp', 'alamat', 'foto' ,'surat', 'status','id_jurusan','pengajuan_id' ];
+                         'email','user_id', 'no_hp', 'alamat','jk', 'foto' ,'surat', 'status','id_jurusan','pengajuan_id' ];
+
+
 
        public function user()
          {
-             return $this->belongsTo(User::class,'id', 'user_id');
+             return $this->belongsTo(User::class);
          }           
       // Relasi ke model Jurusan
     public function jurusan()
@@ -32,7 +34,10 @@ class Pengajuan extends Model
     }
     public function peserta()
     {
-        return $this->hasMany(Peserta::class, 'pengajuan_id');
+        return $this->hasMany(Peserta::class,'pembimbing_id');
     }
-    
+    public function pesertaMagang()
+    {
+        return $this->hasMany(pesertamagang::class);
+    }
 }

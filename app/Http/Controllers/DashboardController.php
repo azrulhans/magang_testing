@@ -6,6 +6,7 @@ use App\Models\jurusan;
 use App\Models\Pembimbing;
 use App\Models\Pengajuan;
 use App\Models\PengajuanSekolah;
+use App\Models\pesertamagang;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -53,19 +54,59 @@ class DashboardController extends Controller
     }
     
     public function savePembimbing(Request $request)
-{
-    foreach ($request->pembimbing as $pengajuan_id => $pembimbing_id) {
-        // Update data pengajuan untuk setiap peserta
-        DB::table('pengajuan')
-            ->where('id', $pengajuan_id)
-            ->update(['pembimbing_id' => $pembimbing_id,
-                   //  'user_id' => auth()->id() // Menyimpan user_id pengguna yang sedang login
-                    ]);
-    }
+    {
+        foreach ($request->pembimbing as $pengajuan_id => $pembimbing_id) {
+            // Update data pembimbing_id pada tabel pengajuan
+         //   dd($pengajuan_id);
+            DB::table('pengajuan')
+                ->where('id', $pengajuan_id)
+                ->update(['pembimbing_id' => $pembimbing_id]);
+    
+            // Ambil data semua peserta magang yang terkait dengan pengajuan ini
+            $pesertaMagangList = DB::table('pesertamagang')
+                ->where('id', $pengajuan_id)
+                ->get();
+            // Update data pembimbing_id untuk setiap peserta magang
+            foreach ($pesertaMagangList as $peserta) {
+                DB::table('pesertamagang')
+                    ->where('id', $peserta->id)
+                    ->update(['pembimbing_id' => $pembimbing_id]);
+            }
+        }
     
     // Redirect kembali dengan pesan sukses
     return redirect()->back()->with('success', 'Pembimbing berhasil disimpan.');
 }
+// public function savePembimbing(Request $request)
+// {
+//     // Ambil semua pengajuan yang terkait dengan user saat ini (atau semua pengajuan jika tidak spesifik)
+//     $pengajuanList = Pengajuan::whereIn('id', array_keys($request->pembimbing))->get();
+
+//     foreach ($pengajuanList as $pengajuan) {
+//         $pengajuan_id = $pengajuan->id; // Ambil pengajuan_id dari tabel pengajuan
+//         $pembimbing_id = $request->pembimbing[$pengajuan_id]; // Ambil pembimbing_id yang dikirim dari form
+
+//         // Update pembimbing_id di tabel pengajuan
+//         $pengajuan->pembimbing_id = $pembimbing_id;
+//         $pengajuan->save();
+
+//         // Ambil semua peserta magang terkait pengajuan ini dari tabel pesertamagang
+//         $pesertaMagangList = pesertamagang::where('pengajuan_id', $pengajuan_id)->get();
+
+//         // Cek apakah data peserta magang terkait ditemukan
+//         if ($pesertaMagangList->isEmpty()) {
+//             return redirect()->back()->with('error', 'Tidak ada data peserta magang terkait untuk pengajuan ID ' . $pengajuan_id);
+//         }
+
+//         // Update pembimbing_id untuk setiap peserta magang
+//         foreach ($pesertaMagangList as $peserta) {
+//             $peserta->pembimbing_id = $pembimbing_id;
+//             $peserta->save();
+//         }
+//     }
+
+//     return redirect()->back()->with('success', 'Data pembimbing berhasil disimpan ke pengajuan dan peserta magang.');
+// }
 
 
     public function cariPeserta(Request $request)
@@ -110,16 +151,11 @@ public function getPembimbingByBagian(Request $request) {
     return response()->json($pembimbingList);
 }
 
-
-
-
-
     public function pengajuan(){
         $datas = new Pengajuan;
         return view("dashboard/pages/pengajuan", compact('datas'));
     }
 
-    
     public function store(Request $request) {
         $request->validate([
             'nama' => 'required|string|max:255',
@@ -152,10 +188,10 @@ public function getPembimbingByBagian(Request $request) {
         $pengajuan->surat = $suratPath;
         $pengajuan->foto = $fotoPath;
         $pengajuan->save();
-      
+
         return redirect('status-pengajuan')->with('success', 'Pengajuan Berhasil Tersimpan');;
     }
-    
+
     public function statusPengajuan() {
         $datas = Pengajuan::where('id', auth()->user()->id)->get();
         return view("dashboard.pages.status", compact('datas'));
@@ -306,12 +342,7 @@ public function getPembimbingByBagian(Request $request) {
 
                     return redirect()->back()->with('error', "Email atau NIM sudah digunakan oleh peserta lain. Status pengajuan tetap 'diproses'.");
                 }
-              // Cek jika pengajuan sudah ada, inisialisasi sebelum digunakan
-                $pengajuan = Pengajuan::where('user_id', auth()->id())->first();
-                if ($pengajuan) {
-                    $pengajuan->user_id = auth()->id();
-                    $pengajuan->save();
-                }
+                $pengajuan = Pengajuan::where('user_id',auth()->user()->id)->first();
                 // Buat akun pengguna baru
                 $user = new User();
                 $user->name = $peserta->nama; // Ambil dari nama di pengajuan
@@ -320,16 +351,14 @@ public function getPembimbingByBagian(Request $request) {
                 $user->password = bcrypt($peserta->nim); // Gunakan nim sebagai password
                 $user->role = 'peserta'; // Tetapkan role 'peserta'
                 $user->save();
-                  // Update tabel pengajuan dengan user_id dari user yang baru dibuat
-                  // Update tabel pengajuan dengan user_id dari user yang baru dibuat
-         
-               //  $pengajuan=  DB::table('pengajuan');
-                // ->where('id', auth()->id());
-              
-                //->update(['user_id' => $user->id])
-                    // Opsional: Berikan role atau akses tertentu kepada user
-                 // $user->role('peserta');
-                    //$user->role = $request->role ('peserta');
+             
+                //    // Simpan data ke tabel pesertamagang
+                // $pesertaMagang = new pesertamagang();
+                // $pesertaMagang->nama = $peserta->nama; // Ambil nama dari data peserta
+                // $pesertaMagang->nim = $peserta->nim; // Ambil nomor HP dari data peserta
+                // $pesertaMagang->id_jurusan = $peserta->id_jurusan; // Ambil id jurusan dari data peserta
+                // $pesertaMagang->pengajuan_id = $peserta->pengajuan_id; // Simpan id pengajuan
+                // $pesertaMagang->save();
             }
         }
 

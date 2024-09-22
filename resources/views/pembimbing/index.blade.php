@@ -20,74 +20,20 @@
     </div>
     <!-- /.content-header -->
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Small boxes (Stat box) -->
+  <!-- Main content -->
+  <section class="content">
+    <div class="container-fluid">
         <div class="row">
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
-
-                <p>Data Peserta</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+            <div class="col-12">
+                <div class="alert alert-success">
+                    <h4 class="alert-heading">Selamat Datang!</h4>
+                    <p>Halo <strong>{{ auth()->user()->name }}</strong>, selamat datang di dashboard pembimbing magang. Di sini, Anda dapat memantau perkembangan peserta magang, memberikan bimbingan.</p>
+                    <p>Peran Anda sebagai pembimbing sangatlah penting dalam membentuk pengalaman magang yang positif bagi para peserta. Kami berharap Anda dapat memberikan arahan dan bimbingan terbaik untuk membantu mereka mencapai tujuan belajar dan profesional mereka.</p>                    <p>Terima kasih atas dedikasi dan komitmen Anda dalam mendukung para peserta magang. Semoga pengalaman ini menjadi kesempatan berharga bagi semua pihak.</p>
+                </div>
             </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-
-                <p>Data Pengajuan</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-stats-bars"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-person-add"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-
-                <p>Unique Visitors</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
         </div>
-      </div><!-- /.container-fluid -->
-    </section>
+    </div>
+</section>
     <!-- /.content -->
   </div>
   @endsection

@@ -56,9 +56,9 @@
                     @foreach($pembimbing as $index => $p)
                     <tr>
                         <td>{{ $loop->iteration }} </td>
-                        <td>{{ $p->user->name }}</td>
-                        <td>{{ $p->user->username }}</td>
-                        <td>{{ $p->user->email }}</td>
+                        <td>{{ $p->user ? $p->user->name : 'Tidak Diketahui' }}</td>
+                        <td>{{ $p->user ? $p->user->username : 'Tidak Diketahui' }}</td>
+                        <td>{{ $p->user ? $p->user->email : 'Tidak Diketahui' }}</td>
                         <td>{{ $p->bagian }}</td>
                         <td>
                         <a href="#" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editModal{{$p->id}}">

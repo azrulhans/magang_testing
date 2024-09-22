@@ -29,7 +29,7 @@
               <i class="fas fa-minus"></i></button>
           </div>
         </div>
-        <form action="{{ route('logbook.update', $peserta->id) }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('logbook.update') . "?id=" . $peserta->id }}" method="POST" enctype="multipart/form-data">
             @csrf
             @method('PUT')
             <div class="card-body">

@@ -34,6 +34,7 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
     //sekolah
     Route::get('dashboard-sekolah',         [SekolahController::class, 'index'])->name("dashboard-sekolah");
     Route::get('biodata-sekolah',           [SekolahController::class, 'biodata'])->name("biodata-sekolah");
+    Route::get('/dashboard/{pengajuan_id}', [SekolahController::class, 'show']);
    // Route::get('biodata-peserta',           [PesertaController::class, 'identitas'])->name("identitas-sekolah");
    //Route::post('biodata-peserta-store',    [PesertaController::class, 'pengajuan'])->name("campus.store");
   // Route::delete('/hapus-data/{id}',        [PesertaController::class, 'hapusData'])->name('hapus-data');
@@ -53,8 +54,6 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
     Route::get('LandingPages-Status/{id}',  [LandingPageController::class, 'landingPengajuan'])->name('LandingPages-Status');
     Route::post('/logout',                  [LoginController::class, 'logout'])->name('logout');
     
-    //
-  
     //routing dashboard admin
     Route::get('/dashboard-utama',                [DashboardController::class , 'dashboard'])->name("dashboard-utama")->middleware('role:admin');
     Route::get('/dashboard-data-peserta-magang',         [DashboardController::class , 'dataPeserta']);
@@ -69,6 +68,7 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
     //routing dashboard peserta
     Route::get('/dashboard-peserta',         [PesertaController::class , 'peserta']);
     Route::get('/dashboard-peserta',         [PesertaController::class , 'dashboard']);
+    Route::get('/update-logbook',         [PesertaController::class , 'updatelogbook'])->name('update.logbook.peserta');
 
     Route::get('/dashboard-data-profile',         [DashboardController::class , 'showProfile']);
     //put dan patch adalah 2 sintak yang sama untuk pengubahan data
@@ -85,6 +85,7 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
     Route::get('/data-pembimbing',         [PembimbingController::class , 'dataPembimbing']);
     Route::get('/dashboard-pembimbing-peserta',         [PembimbingController::class , 'index']);
     Route::get('/dashboard-data-peserta',         [PembimbingController::class , 'peserta']);
+    Route::get('/dashboard-data-view',     [PembimbingController::class , 'viewLogbook'])->name('pembimbing.view');
     Route::post('/reopen-form/{id}',            [PembimbingController::class, 'reopenForm'])->name('reopen.form')->middleware('auth', 'role:pembimbing');
     Route::post('/pembimbing-store',            [PembimbingController::class, 'storePembimbing'])->name('pembimbing.store');
      Route::delete('/pembimbing-delete/{id}',    [PembimbingController::class, 'hapusPembimbing'])->name("pembimbing.delete");

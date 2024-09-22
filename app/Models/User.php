@@ -105,4 +105,9 @@ class User extends Authenticatable
         {
             return $this->belongsTo(Jurusan::class, 'id_jurusan'); // Misalkan 'id_jurusan' adalah foreign key di tabel user
         }
+          // Relasi ke PesertaMagang
+    public function pesertaMagang()
+    {
+        return $this->hasMany(pesertamagang::class);
+    }
 }

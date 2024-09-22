@@ -24,13 +24,13 @@
                 </a>
             </li>
             
-            <li class="nav-item has-treeview">
+            {{-- <li class="nav-item has-treeview">
                 <a href="{{asset('dashboard-pembimbing-peserta')}}" class="nav-link {{ Request::is('dashboard-pembimbing-peserta') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
                     <p>Logbook Peserta</p>
                 </a>
             </li>
-            
+             --}}
             <li class="nav-item has-treeview">
                 <a href="{{asset('dashboard-data-peserta')}}" class="nav-link {{ Request::is('dashboard-data-peserta') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
