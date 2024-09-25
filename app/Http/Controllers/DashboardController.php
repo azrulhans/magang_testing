@@ -23,7 +23,21 @@ class DashboardController extends Controller
         $userId = auth()->user()->id;
     
         // Mengambil semua data dari tabel PengajuanSekolah
-        $peserta = PengajuanSekolah::with('balasan')->get();
+        $peserta = PengajuanSekolah::with('balasan')
+        ->select(
+            'pengajuansekolah.id', 
+            'pengajuansekolah.no_surat', 
+            'pengajuansekolah.tgl_surat', 
+            'pengajuansekolah.tgl_mulai', 
+            'pengajuansekolah.tgl_selesai', 
+            'pengajuansekolah.surat', 
+            'sekolah.name as name', 
+            'sekolah.email as email', 
+            'sekolah.alamat as alamat', 
+            'sekolah.no_telp as no_hp'
+        )
+        ->join('sekolah', 'pengajuansekolah.user_id', '=', 'sekolah.user_id')
+        ->get();
     
         // Pisahkan peserta yang belum diisi statusnya
         $belumDiisi = $peserta->filter(function($p) {
@@ -204,8 +218,23 @@ public function getPembimbingByBagian(Request $request) {
         if (!auth()->user()->role === 'admin') {
             return redirect("dashboard-utama");
         }
+        $jumlahPeserta = DB::table('pengajuansekolah')
+            ->join('pengajuan', 'pengajuansekolah.id', '=', 'pengajuan.pengajuan_id')
+            ->select('pengajuansekolah.id', 'pengajuan.nama')
+            ->count();
+
+        $jumlahSurat = DB::table('pengajuansekolah')->count();
+
+        $jumlahPembimbing = DB::table('users')
+        ->where('role', 'pembimbing')
+        ->count();
+        
+        $jumlahBagian = DB::table('pembimbing')
+        ->select('id', 'bagian')
+        ->count();
+
         $user = User::findOrFail(Auth::id());
-        return view("admin.pages.dashboard",compact('user'));
+        return view("admin.pages.dashboard",compact('user','jumlahPeserta','jumlahSurat','jumlahPembimbing','jumlahBagian'));
      }
 
     //liat dashboard peserta

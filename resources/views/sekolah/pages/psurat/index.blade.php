@@ -8,12 +8,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Data Peserta Magang</h1>
+                    <h1>Data Pengajuan Magang</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
-                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Data Magang</a>
+                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Data Pengajuan Magang</a>
                         </li>
                     </ol>
                 </div>
@@ -26,7 +26,7 @@
                 <div class="card">
                     <div class="card-header">
                         <a href="{{ asset('pengajuan-surat') }}" class="btn btn-md btn-primary" data-toggle="modal" data-target="#addCampusModal">
-                            <i class="fas fa-plus-square"></i>
+                            <i class="fas fa-plus-square"> tambah surat</i>
                         </a>
                     </div>
                     <!-- /.card-header -->
@@ -37,8 +37,8 @@
                                     <th>No</th>
                                     <th>Nomor Surat</th>
                                     <th>Tanggal Surat</th>
-                                    <th>Tanggal Mulai</th>
-                                    <th>Tanggal Akhir</th>
+                                    <th>Tanggal Mulai PKL</th>
+                                    <th>Tanggal Akhir PKL</th>
                                     <th>Surat</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -65,10 +65,10 @@
                                             data-tgl-mulai="{{ $p->tgl_mulai }}"
                                             data-tgl-selesai="{{ $p->tgl_selesai }}"
                                             data-surat="{{ asset('storage/' . $p->surat) }}">
-                                            <i class="fas fa-eye"></i>
+                                            <i class="fas fa-eye">&nbsp;lihat</i>
                                         </a>
                                         <a href="" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#addDataModal{{ $p->id }}">
-                                            <i class="fas fa-plus-square"></i> 
+                                            <i class="fas fa-plus-square"> tambah peserta</i> 
                                         </a>
                                         <a href="" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#exampleModal{{ $p->id }}">
                                             <i class="fas fa-trash"></i>
@@ -79,16 +79,6 @@
                             </tbody>
                         </table>
     
-                        <!-- Pagination Links -->
-                        <div class="card-footer clearfix">
-                            <ul class="pagination pagination-sm m-0 float-right">
-                              <li class="page-item"><a class="page-link" href="#">&laquo;</a></li>
-                              <li class="page-item"><a class="page-link" href="#">1</a></li>
-                              <li class="page-item"><a class="page-link" href="#">2</a></li>
-                              <li class="page-item"><a class="page-link" href="#">3</a></li>
-                              <li class="page-item"><a class="page-link" href="#">&raquo;</a></li>
-                            </ul>
-                          </div>
                     </div>
                     <!-- /.card-body -->
                 </div>
@@ -97,106 +87,7 @@
     </section>
     
     
-    <section class="content-header">
-        <div class="container-fluid">
-            <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1>Status Peserta Magang</h1>
-                </div>
-            </div>
-        </div><!-- /.container-fluid -->
-    </section>
-    <section class="content">
-        <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h3 class="card-title">Data status pengajuan magang</h3>
-  
-                  <div class="card-tools">
-                    <div class="input-group input-group-sm" style="width: 150px;">
-                      <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-  
-                      <div class="input-group-append">
-                        <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body table-responsive p-0">
-                  <table class="table table-hover text-nowrap">
-                    <thead>
-                      <tr>
-                        <th>No</th>
-                        <th>Nomor Surat</th>
-                        <th>Tanggal Surat</th>
-                        <th>Status</th>
-                        <th>Keterangan</th>
-                        <th>Surat Balasan</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($peserta as $p)
-                      <tr>
-                        <td>{{$loop->iteration}} </td>
-                        <td> {{$p ->no_surat}} </td>
-                        <td> {{$p ->tgl_surat}} </td>
-                        <td> 
-                            @if($p->balasan)
-                            @switch($p->balasan->status)
-                                @case('diterima')
-                                    <span class="badge bg-success">Diterima</span>
-                                    @break
-                    
-                                @case('ditolak')
-                                    <span class="badge bg-danger">Ditolak</span>
-                                    @break
-                    
-                                @default
-                                    <span class="badge bg-secondary">Status Tidak Diketahui</span>
-                            @endswitch
-                        @else
-                            <span class="badge bg-primary">Proses</span>
-                        @endif
-                        </td>
-                        <td>
-                            @if($p->balasan)
-                                @if($p->balasan->status == 'ditolak')
-                                    {{ $p->balasan->alasan }} {{-- Menampilkan alasan penolakan --}}
-                                @elseif($p->balasan->status == 'diterima')
-                                    Selamat, kamu diterima! {{-- Menampilkan pesan diterima --}}
-                                @endif
-                            @else
-                                <span class="badge bg-primary">Proses</span>
-                            @endif
-                        </td>
-                    
-                        <!-- Kolom untuk menampilkan surat balasan -->
-                        <td>
-                            @if($p->balasan)
-                                @if($p->balasan->status == 'diterima')
-                                    <a href="{{ asset('storage/surat_balasan/' . basename($p->balasan->surat_balasan)) }}" target="_blank">
-                                        Lihat Surat Balasan
-                                    </a> {{-- Link untuk melihat surat balasan jika diterima --}}
-                                @elseif($p->balasan->status == 'ditolak')
-                                    Tidak ada surat balasan {{-- Menampilkan pesan "tidak ada surat balasan" jika ditolak --}}
-                                @endif
-                            @else
-                                <span class="badge bg-primary">Proses</span>
-                            @endif
-                        </td>
-                      </tr>
-                      @endforeach
-                    </tbody>
-                  </table>
-                </div>
-                <!-- /.card-body -->
-              </div>
-              <!-- /.card -->
-            </div>
-          </div>
-    </section>
+   
 </div>
 @foreach($peserta as $p)
 <!-- Modal Hapus -->
@@ -256,8 +147,8 @@
                         <p><strong>Tanggal Surat:</strong> <span id="modal-tgl-surat{{ $p->id }}">{{ $p->tgl_surat }}</span></p>
                     </div>
                     <div class="col-md-6">
-                        <p><strong>Tanggal Mulai:</strong> <span id="modal-tgl-mulai{{ $p->id }}">{{ $p->tgl_mulai }}</span></p>
-                        <p><strong>Tanggal Akhir:</strong> <span id="modal-tgl-selesai{{ $p->id }}">{{ $p->tgl_selesai }}</span></p>
+                        <p><strong>Tanggal Mulai PKL:</strong> <span id="modal-tgl-mulai{{ $p->id }}">{{ $p->tgl_mulai }}</span></p>
+                        <p><strong>Tanggal Akhir PKL:</strong> <span id="modal-tgl-selesai{{ $p->id }}">{{ $p->tgl_selesai }}</span></p>
                         <p><strong>Surat:</strong> 
                             @if($p->surat)
                                 <a href="{{ asset('storage/' . $p->surat) }}" target="_blank">Lihat Surat</a>
@@ -404,11 +295,11 @@
                         <input type="date" class="form-control" id="alamat_kampus" name="tgl_surat" required>
                     </div>
                     <div class="form-group">
-                        <label for="no_lldikti">Tanggal Mulai</label>
+                        <label for="no_lldikti">Tanggal Mulai PKL</label>
                         <input type="date" class="form-control" id="no_lldikti" name="tgl_mulai" required>
                     </div>
                     <div class="form-group">
-                        <label for="no_lldikt">Tanggal Akhir</label>
+                        <label for="no_lldikt">Tanggal Akhir PKL</label>
                         <input type="date" class="form-control" id="no_lldikt" name="tgl_selesai" required>
                     </div>
                     <div class="form-group">

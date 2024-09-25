@@ -49,7 +49,6 @@
                     <label for="inputDokumentasi">Dokumentasi Kegiatan</label>
                     <input type="file" id="inputDokumentasi" name="dokumentasi" class="form-control">
                     @if($peserta->dokumentasi)
-                        <small>Dokumentasi saat ini: <a href="{{ asset('storage/' . $peserta->dokumentasi) }}" target="_blank">Lihat</a></small>
                     @endif
                 </div>
             </div>

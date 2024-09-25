@@ -15,7 +15,7 @@
                             @csrf
 
                             <div class="form-group row mb-4">
-                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama Sekolah') }}</label>
+                                <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama Sekolah / Kampus') }}</label>
                                 <div class="col-md-6">
                                     <input id="name" type="text" 
                                            class="form-control @error('name') is-invalid @enderror" 
@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="form-group row mb-4">
-                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Email Sekolah') }}</label>
+                                <label for="email" class="col-md-4 col-form-label text-md-right">{{ __('Email Sekolah / Kampus') }}</label>
                                 <div class="col-md-6">
                                     <input id="email" type="email" 
                                            class="form-control @error('email') is-invalid @enderror" 
@@ -47,7 +47,7 @@
                             </div>
 
                             <div class="form-group row mb-4">
-                                <label for="alamat_kampus" class="col-md-4 col-form-label text-md-right">{{ __('Alamat Sekolah') }}</label>
+                                <label for="alamat_kampus" class="col-md-4 col-form-label text-md-right">{{ __('Alamat Sekolah / Kampus') }}</label>
                                 <div class="col-md-6">
                                     <input id="alamat_kampus" type="text" 
                                            class="form-control @error('alamat_kampus') is-invalid @enderror" 
@@ -63,7 +63,7 @@
                             </div>
 
                             <div class="form-group row mb-4">
-                                <label for="no_telp_kampus" class="col-md-4 col-form-label text-md-right">{{ __('No Telepon Sekolah') }}</label>
+                                <label for="no_telp_kampus" class="col-md-4 col-form-label text-md-right">{{ __('No Telepon Sekolah / Kampus') }}</label>
                                 <div class="col-md-6">
                                     <input id="no_telp_kampus" type="text" 
                                            class="form-control @error('no_telp_kampus') is-invalid @enderror" 

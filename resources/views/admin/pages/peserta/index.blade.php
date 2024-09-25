@@ -8,7 +8,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Data Peserta Magang</h1>
+                    <h1>Data Pengajuan Magang</h1>
                 </div>
             </div>
         </div><!-- /.container-fluid -->
@@ -40,10 +40,10 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nomor Surat</th>
-                                    <th>Tanggal Surat</th>
-                                    <th>Tanggal Mulai</th>
-                                    <th>Tanggal Akhir</th>
+                                    <th>Nama Sekolah</th>
+                                    <th>Email</th>
+                                    <th>No HP</th>
+                                    <th width="200">Alamat</th>
                                     <th>Surat</th>
                                     <th>Aksi</th>
                                     <th>Status</th>
@@ -55,10 +55,10 @@
                                 }) as $p)
                                 <tr>
                                     <td>{{$loop->iteration}} </td>
-                                    <td> {{$p ->no_surat}} </td>
-                                    <td> {{$p ->tgl_surat}} </td>
-                                    <td> {{$p ->tgl_mulai}} </td>
-                                    <td> {{$p ->tgl_selesai}} </td>
+                                    <td>{{$p->name}} </td>
+                                    <td> {{$p ->email}} </td>
+                                    <td> {{$p ->no_hp}} </td>
+                                    <td> {{$p ->alamat}} </td>
                                     <td> 
                                         @if($p->surat)
                                         <a href="{{ asset('storage/' . $p->surat) }}" target="_blank">Lihat Surat</a>
@@ -166,6 +166,7 @@
             <div class="modal-body">
                 <div class="row">
                     <div class="col-md-6">
+                        <p><strong>Nama Sekolah / Kampus:</strong> <span id="modal-no-surat{{ $p->id }}">{{ $p->name }}</span></p>
                         <p><strong>Nomor Surat:</strong> <span id="modal-no-surat{{ $p->id }}">{{ $p->no_surat }}</span></p>
                         <p><strong>Tanggal Surat:</strong> <span id="modal-tgl-surat{{ $p->id }}">{{ $p->tgl_surat }}</span></p>
                     </div>

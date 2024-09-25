@@ -60,15 +60,6 @@
                 <li class="nav-item">
                     <a class="page-scroll" href="#faq">FAQ</a>
                 </li>
-                @auth
-                <li class="nav-item">
-                    <a href="{{route('LandingPages-Status', ['id' => $datas->id]) }}">Status Pengajuan</a>
-                </li>
-                @endauth
-                {{-- <li class="nav-item">
-                    <a class="page-scroll" href="#kontak">Kontak</a>
-                </li> --}}
-                  <!-- logic login Daftar Akun -->
                   @guest
                   @if (Route::has('login'))
                   <li class="nav-item">
@@ -87,16 +78,16 @@
                       </a>
 
                       <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                          <a class="dropdown-item" href="{{ route('logout') }}"
-                             onclick="event.preventDefault();
-                                           document.getElementById('logout-form').submit();">
-                              {{ __('Logout') }}
-                          </a>
-
-                          <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                              @csrf
-                          </form>
-                      </div>
+                        <a class="dropdown-item" href="{{ route('logout') }}"
+                           onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                            {{ __('Logout') }}
+                        </a>
+                    
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                            @csrf
+                        </form>
+                    </div>
+                    
                   </li>
               @endguest
           </ul>
@@ -131,7 +122,7 @@
             Selamat Datang, {{ Auth::user()->name }}!
         @else
             Selamat Datang di Website Magang <br>
-            Diskominfo Kota Dumai
+            Diskominfotiksan Kota Dumai
         @endif
             </h3>
             </div>
@@ -159,8 +150,7 @@
                 data-wow-delay="0.5s"
             >
             <br>
-               Belajar bersama kami, kami membuka penerimaan Mahasiswa dan siswa Magang
-               yang sedang melaksanakan kegiatan Magang atau PKL
+            Bergabunglah dengan kami! Kami menerima mahasiswa dan siswa yang sedang menjalani magang atau PKL.
             </p>
             <a href="{{route('dashboard-sekolah')}}" class="btn-daftar mt-5">Daftar Pengajuan</a>
         </div>
@@ -192,13 +182,13 @@
             <div class="section-title">
                 <div class="line"></div>
                 <h3 class="title">
-                Belajar bersama kami
+                Bergabung Bersama Kami
                 </h3>
             </div><br>
             <!-- section title -->
             <p class="text">
                <p style="font-weight: bold">Ingin belajar dan berkembang di bidang teknologi informasi? </p>
-               <p class="mt-2">Gabung bersama tim kami di Diskominfo Kota Dumai! Kamu akan mendapatkan kesempatan untuk belajar langsung dari para ahli dan terlibat dalam proyek-proyek menarik.</br> 
+               <p class="mt-2">Gabung bersama kami di Diskominfotiksan Kota Dumai! Kamu akan mendapatkan kesempatan untuk belajar langsung dari para ahli dan terlibat dalam proyek-proyek menarik.</br> 
                 Temukan kami di Mal Pelayanan Publik, Teluk Binjai.Kota Dumai</p>
             </div>
             <!-- about content -->
@@ -209,7 +199,7 @@
             data-wow-duration="1s"
             data-wow-delay="0.5s"
             >
-            <img src="assets/images/about/about2.svg" alt="about" />
+            <img src="foto/foto.jpg" alt="about" style="border-radius: 5px " />
             </div>
             <!-- about image -->
         </div>
@@ -275,7 +265,7 @@
                         </h2>
                         <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Proses pengajuan akan dilakukan oleh TU Diskominfo Kota Dumai paling lambat 2 minggu
+                                Proses pengajuan akan dilakukan oleh TU Diskominfotiksan Kota Dumai paling lambat 2 minggu
                             </div>
                         </div>
                     </div>
@@ -287,7 +277,7 @@
                         </h2>
                         <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour" data-bs-parent="#faqAccordion">
                             <div class="accordion-body">
-                                Silahkan login ke dashboard kampus/sekolah dan lihat di menu Pengajuan jika sudah menginput data maka status otomatis akan nampil
+                                Silahkan login ke dashboard kampus/sekolah dan lihat di menu Status Magang jika sudah menginput data maka status otomatis akan nampil
                             </div>
                         </div>
                     </div>

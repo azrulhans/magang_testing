@@ -14,28 +14,33 @@ use Illuminate\Support\Facades\DB;
 class PSekolahController extends Controller
 {
     public function index() {
-        // Mendapatkan ID user yang sedang login
         $userId = auth()->user()->id;
         
-        // Mengambil data pengajuan sekolah yang terkait dengan user yang sedang login
         $peserta = PengajuanSekolah::with('balasan') // Menambahkan eager loading untuk balasan
         ->where('user_id', $userId)
         ->latest()
         ->simplePaginate(5);
-        // $peserta =  DB::table('pengajuansekolah')
-        // ->where('user_id', $userId)  // Memfilter berdasarkan user_id
-        // ->get();
-       // Mengambil semua id_jurusan dari data Pengajuan yang terkait dengan PengajuanSekolah
-
-       // Mengambil data Pengajuan yang terkait dengan id_pengajuan dari PengajuanSekolah
+   
          $data = Pengajuan::with('jurusan')
          ->where('id_jurusan') // Menggunakan whereIn untuk mencari id yang sesuai
         ->latest()
         ->get();
-       // $pengajuan = Pengajuan::findOrFail($peserta->pengajuan_id);
-        // Menggabungkan data Pengajuan dan PengajuanSekolah berdasarkan pengajuan_id
-        // Mengirim data ke view
+  
         return view('sekolah.pages.psurat.index', compact('data','peserta'));
+    }
+    public function statusPeserta(){
+        $userId = auth()->user()->id;
+        
+        $peserta = PengajuanSekolah::with('balasan') // Menambahkan eager loading untuk balasan
+        ->where('user_id', $userId)
+        ->latest()
+        ->simplePaginate(5);
+   
+         $data = Pengajuan::with('jurusan')
+         ->where('id_jurusan') // Menggunakan whereIn untuk mencari id yang sesuai
+        ->latest()
+        ->get();
+        return view('sekolah.pages.psurat.status',compact('data','peserta'));
     }
 
     public function pengajuanSurat(Request $request){

@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class PembimbingController extends Controller
 {
@@ -34,7 +35,21 @@ class PembimbingController extends Controller
     ->where('pembimbing.user_id', $userId)
     ->get();
 
-    return view('pembimbing.pages.v_peserta',compact('pembimbing'));
+    $peserta = [];
+
+    foreach($pembimbing as $member){
+        $peserta[] = $member;
+    }
+
+    foreach($peserta as $key => $memberPeserta){
+        $dataPeserta = Peserta::where("nim", $memberPeserta->nim)->count();
+        $peserta[$key]->kehadiran = $dataPeserta;
+    }
+    
+    $data = [
+        'pengajuan'      => $peserta,
+    ];
+    return view('pembimbing.pages.v_peserta',compact('pembimbing','data'));
     }
 
     public function dashboard(){
@@ -145,54 +160,71 @@ class PembimbingController extends Controller
         return redirect()->back()->with('success', 'Data berhasil dihapus');
     }
     public function update(Request $request, $id)
-{
-    // Validasi input dari form
-    $request->validate([
-    'name' => 'required|string|max:255',
-    'username' => 'required|string|max:255|unique:users,username,' . $id,
-    'email' => 'required|email|max:255|unique:users,email,' . $id,
-    'bagian' => 'required|string|max:255',
-], [
-    'name.required' => 'Nama wajib diisi.',
-    'name.string' => 'Nama harus berupa teks.',
-    'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+    {
+        // Ambil data pembimbing berdasarkan ID
+        $pembimbing = Pembimbing::findOrFail($id);
     
-    'username.required' => 'Username wajib diisi.',
-    'username.string' => 'Username harus berupa teks.',
-    'username.max' => 'Username tidak boleh lebih dari 255 karakter.',
-    'username.unique' => 'Username sudah digunakan, silakan pilih username lain.',
-
-    'email.required' => 'Email wajib diisi.',
-    'email.email' => 'Format email tidak valid.',
-    'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
-    'email.unique' => 'Email sudah digunakan, silakan pilih email lain.',
-
-    'bagian.required' => 'Bagian wajib diisi.',
-    'bagian.string' => 'Bagian harus berupa teks.',
-    'bagian.max' => 'Bagian tidak boleh lebih dari 255 karakter.',
-]);
-
-    // Ambil data pembimbing berdasarkan ID
-    $pembimbing = Pembimbing::findOrFail($id);
-
-    // Update tabel users
-    $user = User::findOrFail($pembimbing->user_id);
-    $user->name = $request->input('name');
-    $user->username = $request->input('username');
-    $user->email = $request->input('email');
-
-    // Jika password diisi, maka update password
-    if ($request->filled('password')) {
-        $user->password = bcrypt($request->input('password'));
+        // Ambil user yang terkait dengan pembimbing
+        $user = User::findOrFail($pembimbing->user_id);
+    
+        // Validasi input dari form
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'username' => [
+                'required',
+                'string',
+                'max:255',
+                // Ignore unique rule untuk user yang sedang diupdate
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                // Ignore unique rule untuk user yang sedang diupdate
+                Rule::unique('users')->ignore($user->id),
+            ],
+            'bagian' => 'required|string|max:255',
+            'password' => 'nullable|min:8|', // Password harus dikonfirmasi
+        ], [
+            'name.required' => 'Nama wajib diisi.',
+            'name.string' => 'Nama harus berupa teks.',
+            'name.max' => 'Nama tidak boleh lebih dari 255 karakter.',
+            
+            'username.required' => 'Username wajib diisi.',
+            'username.string' => 'Username harus berupa teks.',
+            'username.max' => 'Username tidak boleh lebih dari 255 karakter.',
+            'username.unique' => 'Username sudah digunakan, silakan pilih username lain.',
+    
+            'email.required' => 'Email wajib diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'email.max' => 'Email tidak boleh lebih dari 255 karakter.',
+            'email.unique' => 'Email sudah digunakan, silakan pilih email lain.',
+    
+            'bagian.required' => 'Bagian wajib diisi.',
+            'bagian.string' => 'Bagian harus berupa teks.',
+            'bagian.max' => 'Bagian tidak boleh lebih dari 255 karakter.',
+            'password.min' => 'Password harus minimal 8 karakter.',
+        ]);
+    
+        // Update tabel users
+        $user->name = $request->input('name');
+        $user->username = $request->input('username');
+        $user->email = $request->input('email');
+    
+        // Jika password diisi, maka update password
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->input('password'));
+        }
+        $user->save();  // Simpan perubahan di tabel users
+    
+        // Update tabel pembimbing
+        $pembimbing->bagian = $request->input('bagian');
+        $pembimbing->save();  // Simpan perubahan di tabel pembimbing
+    
+        return redirect()->back()->with('success', 'Data pembimbing berhasil diupdate.');
     }
-    $user->save();  // Simpan perubahan di tabel users
-
-    // Update tabel pembimbing
-    $pembimbing->bagian = $request->input('bagian');
-    $pembimbing->save();  // Simpan perubahan di tabel pembimbing
-
-    return redirect()->back()->with('success', 'Data pembimbing berhasil diupdate.');
-}
+    
 
 public function viewLogbook(Request $request){
     $id = $request->input('id');
@@ -206,14 +238,4 @@ public function viewLogbook(Request $request){
     
     return view('pembimbing.pages.v_view', compact('pembimbing'));
  }
-    // public function view(){
-    //  // Contoh untuk membuka kembali form
-    // $peserta = Peserta::where('tanggal', $currentDate)->where('user_id', Auth::id())->first();
-    // if ($peserta) {
-    // $peserta->is_reopened = true;
-    // $peserta->save();
-    // }
-
-    //     return view('pembimbing.pages.v_logbook',compact('peserta'));
-    // }
 }

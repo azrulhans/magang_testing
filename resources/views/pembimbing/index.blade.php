@@ -26,9 +26,9 @@
         <div class="row">
             <div class="col-12">
                 <div class="alert alert-success">
-                    <h4 class="alert-heading">Selamat Datang!</h4>
-                    <p>Halo <strong>{{ auth()->user()->name }}</strong>, selamat datang di dashboard pembimbing magang. Di sini, Anda dapat memantau perkembangan peserta magang, memberikan bimbingan.</p>
-                    <p>Peran Anda sebagai pembimbing sangatlah penting dalam membentuk pengalaman magang yang positif bagi para peserta. Kami berharap Anda dapat memberikan arahan dan bimbingan terbaik untuk membantu mereka mencapai tujuan belajar dan profesional mereka.</p>                    <p>Terima kasih atas dedikasi dan komitmen Anda dalam mendukung para peserta magang. Semoga pengalaman ini menjadi kesempatan berharga bagi semua pihak.</p>
+                    <p class="alert-heading">Selamat Datang! </p>
+                    <p>Halo <strong>{{ auth()->user()->name }}</strong>,selamat datang di dashboard pembimbing magang, 
+                      Anda dapat memantau perkembangan peserta dan memberikan bimbingan. Peran Anda sangat penting untuk menciptakan pengalaman magang yang positif.</p>
                 </div>
             </div>
         </div>

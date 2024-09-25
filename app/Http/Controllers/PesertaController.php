@@ -77,10 +77,10 @@ class PesertaController extends Controller
         if ($request->hasFile('dokumentasi')) {
             // Simpan file dokumentasi dan dapatkan path-nya
             $dokumentasiPath = $request->file('dokumentasi')->store('dokumentasi', 'public');
+            $peserta->dokumentasi = $dokumentasiPath;
         } 
         $peserta->judul          = $request->judul;
         $peserta->deskripsi      = $request->deskripsi;
-        $peserta->dokumentasi    = $dokumentasiPath;
         $peserta->is_reopened    = false;
         $peserta->update();
         
@@ -151,6 +151,6 @@ public function edit()
             'is_reopened' => 1
         ];
         $pembimbing->update($dataupdate);
-        return redirect('dashboard-data-view?id='. $id)->with('success', 'Data berhasil terupdate');
+        return redirect('dashboard-data-view?id='. $id)->with('success', 'Form Berhasil Dibuka');
      }
 }

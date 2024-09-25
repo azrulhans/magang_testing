@@ -47,7 +47,7 @@
                <li class="nav-item has-treeview">
                    <a href="{{ url('dashboard-data-peserta-magang') }}" class="nav-link {{ Request::is('dashboard-data-peserta-magang*') ? 'active' : '' }}">
                        <i class="far fa-circle nav-icon"></i>
-                       <p>Data Peserta Magang</p>
+                       <p>Data Pengajuan Magang</p>
                    </a>
                </li>
            @endif

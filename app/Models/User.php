@@ -31,11 +31,6 @@ class User extends Authenticatable
         'username',
         'bagian',
     ];
-    // public function role(string $role): bool
-    // {
-    //     return $this->role === $role;
-    //     //untuk membandingkan dan menyamakan anatar 2 variable dan fungsi
-    // }
     public function checkRole(string $role): bool
 {
     return $this->role === $role;

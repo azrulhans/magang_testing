@@ -39,6 +39,7 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
    //Route::post('biodata-peserta-store',    [PesertaController::class, 'pengajuan'])->name("campus.store");
   // Route::delete('/hapus-data/{id}',        [PesertaController::class, 'hapusData'])->name('hapus-data');
    Route::get('pengajuan-surat-magang',           [PSekolahController::class, 'index'])->name("pengajuan.index")->middleware('role:sekolah');
+   Route::get('status-surat-magang',           [PSekolahController::class, 'statusPeserta']);
    Route::post('/pengajuan-surat-ajukan',       [PSekolahController::class, 'ajukan'])->name("ajukan");
    Route::get('/pengajuan-surat-view/{id}',     [PSekolahController::class, 'view'])->name("pengajuan-view");
    Route::delete('/pengajuan-hapus/{id}',     [PSekolahController::class, 'destroy'])->name('pengajuan-hapus-peserta');
@@ -94,8 +95,8 @@ Route::group(['middleware' => ['auth', 'role:admin|sekolah|tu|peserta|pembimbing
 
      //routing kabid
      Route::get('/dashboard-kabid',         [KabidController::class, 'index'])->middleware('role:kabid');
-     Route::get('/dashboard-absensi-peserta',         [KabidController::class, 'absensi']);
-
+     Route::get('/dashboard-absensi-peserta',         [KabidController::class, 'absensi'])->name('kabid.absensi');
+     Route::get('/dashboarh-peserta-pkl',     [KabidController::class , 'viewLogbook'])->name('kabid.view');
      
     //yang lama
     Route::get("status-pengajuan", [DashboardController::class, 'statusPengajuan'])->name("status.pengajuan");

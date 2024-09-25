@@ -1,4 +1,4 @@
-@extends("pembimbing.layouts.main")
+@extends("kabid.layouts.main")
 @section('content')
 @include('sweetalert::alert')
 
@@ -7,12 +7,12 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>Data Peserta</h1>
+                    <h1>Logbook Peserta</h1>
                 </div>
                 <div class="col-sm-6">
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
-                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Data Peserta PKL</a>
+                            <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Logbook Peserta </a>
                         </li>
                     </ol>
                 </div>
@@ -30,36 +30,33 @@
                                 <tr>
                                     <th>No</th>
                                     <th>Nama</th>
-                                    <th>Nim</th>
-                                    <th>Jurusan</th>
-                                    <th>JK</th>
-                                    <th>No HP</th>
-                                    <th>Alamat</th>
-                                    <th>Kehadiran</th>
-                                    <th>Logbook</th>
+                                    <th>judul</th>
+                                    <th>Tanggal</th>
+                                    <th>Deskripsi</th>
+                                    <th>Dokumentasi</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($pembimbing as $p)
+                                @foreach($pembimbing as $pese => $p)
                                 <tr>
-                                    <td>{{ $loop->iteration }}</td>
-                                    <td>{{ $p->nama ?? 'Nama tidak ditemukan' }}</td>
-                                    <td>{{ $p->nim }}</td>
-                                    <td>{{ $p->nama_jurusan ?? 'Jurusan tidak ditemukan' }}</td>
-                                    <td>{{ $p->jk }}</td>
-                                    <td>{{ $p->no_hp }}</td>
-                                    <td>{{ $p->alamat }}</td>
-                                    <td>{{ $p->kehadiran }}</td>
+                                    <td>{{$loop->iteration}} </td>
+                                    <td> {{ $p->nama ?? 'Nama tidak ditemukan' }}</td>
+                                    <td> {{$p->judul}}  </td>
                                     <td>
-                                        <a href="{{route('pembimbing.view') . '?id=' . $p->nim}}" class="btn btn-sm btn-primary">
-                                            <i class="fas fa-eye">Lihat</i> 
-                                            </a>
+                                        {{ \Carbon\Carbon::parse($p->tanggal)->format('d-m-Y') }}
+                                    </td>
+                                    <td> {{$p ->deskripsi}} </td>
+                                    <td> 
+                                        @if($p->dokumentasi)
+                                        <img src="{{ asset('storage/' . $p->dokumentasi) }}" alt="Dokumentasi    {{ $p->judul }}" width="80" height="80">
+                                    @else
+                                        Tidak ada dokumentasi
+                                    @endif    
                                     </td>
                                 </tr>
                                 @endforeach
                             </tbody>
                         </table>
-                        
                     </div>
                     <!-- /.card-body -->
                     

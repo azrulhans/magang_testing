@@ -67,18 +67,22 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-          // Menyimpan data sekolah ke dalam tabel 'sekolah'
+         // Pertama, buat user baru dan dapatkan ID-nya
+    $user = User::create([
+        'name' => $data['name'],
+        'email' => $data['email'],
+        'password' => Hash::make($data['password']),
+    ]);
+
+    // Setelah user berhasil dibuat, simpan data sekolah dengan user_id dari user yang baru dibuat
     Sekolah::create([
         'name' => $data['name'],
         'email' => $data['email'],
         'alamat' => $data['alamat'], // Sesuaikan dengan name input pada form
         'no_telp' => $data['no_telp'], // Sesuaikan dengan name input pada form
+        'user_id' => $user->id, // Menyimpan user_id dari user yang baru registrasi
     ]);
 
-        return User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => Hash::make($data['password']),
-        ]);
+    return $user;
     }
 }

@@ -29,10 +29,27 @@
               <li class="nav-item has-treeview">
                 <a href="{{ url('pengajuan-surat-magang') }}" class="nav-link {{ Request::is('pengajuan-surat-magang*') ? 'active' : '' }}">
                     <i class="far fa-circle nav-icon"></i>
-                    <p>Peserta Magang</p>
+                    <p>Pengajuan Magang</p>
                 </a>
             </li>
               @endif
+              @if(Auth::user()->role == 'sekolah')
+              <li class="nav-item has-treeview">
+                <a href="{{ asset('status-surat-magang') }}" class="nav-link {{ Request::is('status-surat-magang*') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Status Magang</p>
+                </a>
+            </li>
+              @endif
+              @if(Auth::user()->role == 'sekolah')
+              <li class="nav-item has-treeview">
+                <a href="{{ asset('data-peserta-magang') }}" class="nav-link {{ Request::is('data-peserta-magang*') ? 'active' : '' }}">
+                    <i class="far fa-circle nav-icon"></i>
+                    <p>Data Peserta Diterima</p>
+                </a>
+            </li>
+              @endif
+
           <li class="nav-item has-treeview">
               <a class="nav-link" href="{{ route('logout') }}"
               onclick="event.preventDefault();

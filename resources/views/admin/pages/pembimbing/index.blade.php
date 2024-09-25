@@ -13,7 +13,6 @@
                     <ol class="breadcrumb float-sm-right">
                         <li class="breadcrumb-item">
                             <a class="breadcrumb-item active" href="#peserta" data-toggle="tab">Pengisian Data Pembimbing</a>
-                      
                         </li>
                     </ol>
                 </div>
@@ -139,11 +138,12 @@
                         <label for="bagian_pembimbing{{ $p->id }}">Bagian</label>
                         <select class="form-control" id="bagian_pembimbing{{ $p->id }}" name="bagian" required>
                             <option value="" disabled>Pilih Bagian</option>
-                            @foreach($bagianList as $bagian)
-                                <option value="{{ $bagian->bagian }}" {{ $p->bagian == $bagian->bagian ? 'selected' : '' }}>
-                                    {{ $bagian->bagian }}
-                                </option>
-                            @endforeach
+                            <!-- Opsi manual yang ditambahkan -->
+                            <option value="Aplikasi" {{ $p->bagian === 'Aplikasi' ? 'selected' : '' }}>Aplikasi</option>
+                            <option value="IKP" {{ $p->bagian === 'IKP' ? 'selected' : '' }}>IKP</option>
+                            <option value="Infrastruktur" {{ $p->bagian === 'Infrastruktur' ? 'selected' : '' }}>Infrastruktur</option>
+                            <option value="Statistik" {{ $p->bagian === 'Statistik dan Persandian' ? 'selected' : '' }}>Statistik dan Persandian</option>
+                            <option value="Umum" {{ $p->bagian === 'Umum' ? 'selected' : '' }}>Umum</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -195,9 +195,11 @@
                         <label for="bagian">Bagian</label>
                         <select class="form-control" id="bagian" name="bagian" required>
                             <option value="" disabled selected>Pilih Bagian</option>
-                            @foreach($bagianList as $bagian)
-                                <option value="{{ $bagian->bagian }}">{{ $bagian->bagian }}</option>
-                            @endforeach
+                            <option value="Aplikasi">Aplikasi</option>
+                            <option value="IKP">IKP</option>
+                            <option value="Infrastruktur">Infrastruktur</option>
+                            <option value="Statistik">Statistik dan Persandian</option>
+                            <option value="Umum">Umum</option>
                         </select>
                     </div>
                 </div>
